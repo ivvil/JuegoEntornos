@@ -3,6 +3,8 @@ package org.example;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 
 public class Player extends JButton {
@@ -13,6 +15,7 @@ public class Player extends JButton {
     private boolean isAPressed     = false;
     private boolean isDPressed     = false;
     private double instantSpeed    = maxSpeed;
+	public ArrayList<String> inventory;
 
     private final Game game;
 
