@@ -4,41 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>dev.shft</groupId>
+    <groupId>org.example</groupId>
     <artifactId>JuegoEntornos</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jme3_g>org.jmonkeyengine</jme3_g>
-        <jme3_v>3.5.2-stable</jme3_v>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>mvnrepository</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
-    
-    <dependencies>
-        <dependency>
-            <groupId>${jme3_g}</groupId>
-            <artifactId>jme3-core</artifactId>
-            <version>${jme3_v}</version>
-        </dependency>
-        <dependency>
-            <groupId>${jme3_g}</groupId>
-            <artifactId>jme3-desktop</artifactId>
-            <version>${jme3_v}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${jme3_g}</groupId>
-            <artifactId>jme3-lwjgl</artifactId>
-            <version>${jme3_v}</version>
-        </dependency>
-    </dependencies>
 </project>
