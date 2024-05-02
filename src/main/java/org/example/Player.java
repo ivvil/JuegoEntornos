@@ -1,23 +1,24 @@
 package org.example;
 
 import java.awt.KeyboardFocusManager;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
 public class Player extends JButton {
-    private double    maxSpeed     =  5;
-    private final int sleepTime    = 10;
+    private double    maxSpeed     =  3;
+    private final int sleepTime    = 6;
     private boolean isWPressed     = false;
     private boolean isSPressed     = false;
     private boolean isAPressed     = false;
     private boolean isDPressed     = false;
     private double instantSpeed    = maxSpeed;
 
-    private final int[] screenBounds;
+    private final Game game;
 
-    public Player(int[] screenBounds, int width, int height){
-        this.screenBounds = screenBounds;
+    public Player(Game game){
         handleMovement();
+        this.game = game;
     }
 
     private class KeyHandler extends Thread{
@@ -104,8 +105,10 @@ public class Player extends JButton {
     }
 
     private void movePlayer(Direction d) {
-        int x = getX();
-        int y = getY();
+        int original_x = getX();
+        int original_y = getY();
+        int x = original_x;
+        int y = original_y;
         switch (d) {
             case UP:
                 y -= (int) Math.round(instantSpeed);
@@ -120,8 +123,12 @@ public class Player extends JButton {
                 x += (int) Math.round(instantSpeed);
                 break;
         }
-        if (x < 0 || x > screenBounds[0] - getWidth()) return;
-        if (y < 0 || y > screenBounds[1] - getHeight()) return;
+        if (game.checkColision(new Rectangle(x, y, getWidth(), getHeight())))
+            return;
+        
         setLocation(x, y);
+
+        if (game.checkColision(new Rectangle(x, y, getWidth(), getHeight())))
+            setLocation(original_x, original_y);
     }
 }

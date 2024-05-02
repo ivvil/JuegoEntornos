@@ -7,12 +7,13 @@ import java.awt.Color;
 
 public class Coin extends JLabel {
     private final Rectangle hitBox;
-    public Coin(int[] screenBounds){
+    private final Game game;
+    public Coin(Game game){
+        this.game = game;
         setText("O");
-        int[] pos = genRandomPosition(screenBounds);
         setFont(new Font("Sans Serif", Font.BOLD, 16));
         setForeground(new Color(189, 198, 0));
-        hitBox = new Rectangle(pos[0], pos[1], 25, 25);
+        hitBox = genRandomPosition();
         setBounds(hitBox);
     }
 
@@ -20,10 +21,17 @@ public class Coin extends JLabel {
         return hitBox;
     }
 
-    private static int[] genRandomPosition(int[] screenBounds){
-        int width = (int) (Math.random() * (screenBounds[0]- 25)) +25;
-        int height = (int) (Math.random() * (screenBounds[1]-25)) +25;
-
-        return new int[]{width, height};
+    private Rectangle genRandomPosition(){
+        int size = 20;
+        Rectangle r;
+        do{
+            r = new Rectangle(
+                (int)(Math.random() * game.getWidth()) - 100,
+                (int)(Math.random() * game.getHeight()) - 100,
+                size,
+                size
+            );
+        }while (game.checkColision(r));
+        return r;
     }
 }
