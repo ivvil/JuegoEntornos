@@ -21,8 +21,8 @@ public class Coin extends JLabel {
     }
 
     private static int[] genRandomPosition(int[] screenBounds){
-        int width = (int) (Math.random() * screenBounds[0]);
-        int height = (int) (Math.random() * screenBounds[1]);
+        int width = (int) (Math.random() * (screenBounds[0]- 25)) +25;
+        int height = (int) (Math.random() * (screenBounds[1]-25)) +25;
 
         return new int[]{width, height};
     }
