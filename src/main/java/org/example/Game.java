@@ -1,9 +1,12 @@
 package org.example;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 
 public class Game extends JPanel {
@@ -14,8 +17,10 @@ public class Game extends JPanel {
     private final Game         gp = this;
     private final JLabel coinsCounter;
     private int coinsCount = 0;
+    private final JFrame jf;
 
-    public Game(int width, int height) {
+    public Game(int width, int height, JFrame frame) {
+        this.jf = frame;
         setLayout(new BorderLayout());
         coinsCounter = new JLabel("Coins: " + coinsCount);
         add(coinsCounter);
@@ -34,11 +39,15 @@ public class Game extends JPanel {
         }
         JLabel dummy = new JLabel(" ");
         add(dummy, BorderLayout.CENTER);
-        InteractionsThread it = new InteractionsThread();
+        EventLoop it = new EventLoop();
         it.start();
     }
 
-    class InteractionsThread extends Thread{
+    private void hideWindow(){
+        jf.setVisible(false);
+    }
+
+    class EventLoop extends Thread{
         @Override
         public void run(){
             while (true){
@@ -50,6 +59,12 @@ public class Game extends JPanel {
                         coins.remove(coins.get(i));
                         gp.repaint();
                     }
+                }
+                if (coinsCount >= 10) {
+                    gp.hideWindow();
+                    JOptionPane.showMessageDialog(null, "You Win!");
+                    gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                    return;
                 }
                 try{
                     Thread.sleep(100);

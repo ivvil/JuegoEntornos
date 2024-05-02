@@ -11,7 +11,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int[] screenSize = getScreenSize();
         screenSize[1] -= 50;
-        frame.add(new Game(screenSize[0], screenSize[1]));
+        frame.add(new Game(screenSize[0], screenSize[1], frame));
         frame.setUndecorated(true);
         frame.setSize(screenSize[0], screenSize[1]);
         frame.setVisible(true);
