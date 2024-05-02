@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 
 public class Main {
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true");
         JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int[] screenSize = getScreenSize();

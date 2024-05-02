@@ -48,10 +48,11 @@ public class Game extends JPanel {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
+                        gp.repaint();
                     }
                 }
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }catch (InterruptedException e){
                     System.out.println(e.getMessage());
                 }
