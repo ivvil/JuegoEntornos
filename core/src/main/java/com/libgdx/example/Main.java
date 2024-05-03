@@ -3,6 +3,7 @@ package com.libgdx.example;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.libgdx.example.UI.MainMenu;
 
 import java.awt.*;
 import java.util.Iterator;
@@ -27,10 +29,11 @@ public class Main extends ApplicationAdapter {
     private Rectangle bucket;
     private Array<Rectangle> raindrops;
     private long lastDropTime;
+    private Screen currentScreen;
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
+/*        batch = new SpriteBatch();
 //        image = new Texture("libgdx.png");
         dropImage = new Texture(Gdx.files.internal("drop.png"));
         bucketImage = new Texture(Gdx.files.internal("bucket.png"));
@@ -46,11 +49,14 @@ public class Main extends ApplicationAdapter {
         bucket.height = 64;
 
         raindrops = new Array<>();
-        spawnRaindrop();
+        spawnRaindrop();*/
+
+        currentScreen = new MainMenu(this);
     }
 
     @Override
     public void render() {
+/*
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         camera.update();
@@ -77,12 +83,14 @@ public class Main extends ApplicationAdapter {
                 iter.remove();
             }
         }
+*/
 
 //        Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
 //        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 //        batch.begin();
 //        batch.draw(image, 140, 210);
 //        batch.end();
+        currentScreen.render(Gdx.graphics.getDeltaTime());
     }
 
     private void spawnRaindrop() {
@@ -97,9 +105,9 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        dropImage.dispose();
-        bucketImage.dispose();
-        batch.dispose();
+//        dropImage.dispose();
+//        bucketImage.dispose();
+//        batch.dispose();
 //        image.dispose();
     }
 }
