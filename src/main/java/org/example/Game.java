@@ -21,10 +21,10 @@ public class Game extends JPanel {
     private final Game gp = this;
     private final JLabel coinsCounter;
     private final JLabel playerHealth;
-    private int coinsCount = 0;
     private final JFrame jf;
     private final JFrame mf;
     private final int playerSize = 50;
+    private int coinsCount = 0;
 
     public Game(int width, int height, JFrame frame, JFrame menuFrame) {
         this.jf = frame;
