@@ -33,8 +33,9 @@ public class Game extends JPanel {
         setLayout(new BorderLayout());
         coinsCounter = new JLabel("Coins: " + coinsCount);
         add(coinsCounter);
-        coinsCounter.setBounds((width / 2) - 25, 0, width, 50);
+        coinsCounter.setBounds((width / 2), 0, width, 50);
 
+        // Define player                        vscode -> MARK: player
         this.player = new Player(this);
         add(player);
         player.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -42,8 +43,9 @@ public class Game extends JPanel {
 
         playerHealth = new JLabel("Health: " + player.getHealth());
         add(playerHealth);
-        playerHealth.setBounds((width / 2) - playerSize, 50, width, 50);
+        playerHealth.setBounds((width / 2), 50, width, 50);
 
+        // Define walls                         vscode -> MARK: walls  
         walls = new Vector<>();
         Wall w1 = new Wall(40, 900, 800, 10);
         add(w1);
@@ -53,7 +55,8 @@ public class Game extends JPanel {
             enemys.add(new Enemy(this));
             add(enemys.get(i));
         }
-
+        
+        // Define coins                         vscode -> MARK: coins
         coins = new Vector<>();
         for (int i = 0; i < numCoins; i++) {
             coins.add(new Coin(this));
