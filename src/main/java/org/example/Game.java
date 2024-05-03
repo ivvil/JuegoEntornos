@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
+import java.awt.event.MouseListener;
 
 public class Game extends JPanel {
 
@@ -35,7 +36,22 @@ public class Game extends JPanel {
         int playerWidth = 25;
         this.player = new Player(this);
         add(player);
-        addMouseListener(new MouseListener());
+        addMouseListener(new MouseListener(){
+            @Override
+            public void mousePressed(MouseEvent e){
+                isMuseClicked = true;
+            }
+            @Override
+            public void mouseReleased(MouseEvent e){
+                isMuseClicked = false;
+            }
+            @Override
+            public void mouseClicked(MouseEvent e){
+                clickPosition = e.getPoint();
+            }
+            @Override public void mouseEntered(MouseEvent e){}
+            @Override public void mouseExited(MouseEvent e){}
+        });
         player.setBounds((width / 2) - playerWidth, (height / 2) - playerHeight, playerWidth, playerHeight);
         walls = new Vector<>();
         Wall w1 = new Wall();
@@ -78,24 +94,6 @@ public class Game extends JPanel {
     private void hideWindow(){
         jf.setVisible(false);
     }
-
-    private static class MouseListener implements java.awt.event.MouseListener {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            isMuseClicked = true;
-        }
-
-        @Override public void mouseReleased(MouseEvent e) {
-                isMuseClicked = false;
-        }
-
-        @Override public void mouseClicked(MouseEvent e) {
-            clickPosition = e.getPoint();
-        }
-        @Override public void mouseEntered(MouseEvent e) {}
-        @Override public void mouseExited(MouseEvent e) {}
-    }
-
 
     class EventLoop extends Thread{
         @Override
