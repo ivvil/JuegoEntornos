@@ -54,8 +54,7 @@ public class Game extends JPanel {
         });
         player.setBounds((width / 2) - playerWidth, (height / 2) - playerHeight, playerWidth, playerHeight);
         walls = new Vector<>();
-        Wall w1 = new Wall();
-        w1.setBounds(40, 900, 800, 10);
+        Wall w1 = new Wall(40, 900, 800, 10);
         add(w1);
         walls.add(w1);
         coins = new Vector<>();

@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
 public class Player extends JButton {
-    private double    maxSpeed     =  3;
+    private double    maxSpeed     = 3;
     private final int sleepTime    = 6;
     private boolean isWPressed     = false;
     private boolean isSPressed     = false;
