@@ -20,7 +20,8 @@ import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
+
+        //System.setProperty("sun.java2d.opengl", "true");
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (Exception e) {
@@ -66,7 +67,7 @@ public class Main {
         singlePlayer.addActionListener(e -> {
             menuFrame.setVisible(false);
 
-            Color playerColor = JColorChooser.showDialog(menuFrame, "Select a player color", Color.CYAN);
+            Color playerColor = JColorChooser.showDialog(menuFrame, "Select a player color", new Color(51, 153, 255));
 
             newGame(gameFrame, menuFrame, playerColor);
             gameFrame[0].setVisible(true);
@@ -79,9 +80,7 @@ public class Main {
             menuFrame.setVisible(true);
         });
 
-        quit.addActionListener(e -> {
-            menuFrame.dispatchEvent(new WindowEvent(menuFrame, WindowEvent.WINDOW_CLOSING));
-        });
+        quit.addActionListener(e -> menuFrame.dispatchEvent(new WindowEvent(menuFrame, WindowEvent.WINDOW_CLOSING)));
 
         menuFrame.setVisible(true);
 
