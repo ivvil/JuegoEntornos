@@ -30,7 +30,7 @@ public class Enemy extends JButton {
                 size,
                 size
             );
-        }while (game.checkColision(r) || game.checkColisionWithEnemy(r));
+        }while (game.checkColision(r) || game.checkColisionWithEnemy(r, this));
         return r;
     }
 
@@ -46,6 +46,7 @@ public class Enemy extends JButton {
         public void run() {
             int counter = 0;
             int change = (int) (Math.random() * 500) + 100;
+            boolean result;
             while (true) {
                 if (counter++ > change){
                     this.axis = Math.random() < 0.5;
@@ -55,28 +56,35 @@ public class Enemy extends JButton {
                 }
                 if (axis) {
                     if (direction) {
-                        if (getX() + getWidth() + 100 > game.getWidth())
+                        if (getX() + getWidth() + 15 > game.getWidth())
                             direction = !direction;
-                        moveEnemy(Direction.RIGHT);
+                        result = moveEnemy(Direction.RIGHT);
                     } else {
-                        if (getX()  - 100 < 0)
+                        if (getX()  - 15 < 0)
                             direction = !direction;
-                        moveEnemy(Direction.LEFT);
+                        result = moveEnemy(Direction.LEFT);
                     }
                 } else {
                     if (direction) {
-                        if (getY() + getHeight() + 100 > game.getHeight())
+                        if (getY() + getHeight() + 15 > game.getHeight())
                             direction = !direction;
-                        moveEnemy(Direction.DOWN);
+                        result = moveEnemy(Direction.DOWN);
                     } else {
-                        if (getY() - 100 < 0)
+                        if (getY() - 15 < 0)
                             direction = !direction;                        
-                        moveEnemy(Direction.UP);
+                        result = moveEnemy(Direction.UP);
                     }
                 }
+                if (result){
+                    this.direction = !direction;
+                    this.axis = !axis;
+                }
+
                 if (game.getPlayer().getBounds().intersects(getBounds())){
                     game.getPlayer().setHealth(game.getPlayer().getHealth() - 1);
                     setLocation(genRandomPosition().getLocation());
+                    this.direction = Math.random() < 0.5;
+                    this.axis = Math.random() < 0.5;
                 }
                 try {
                     Thread.sleep(sleepTime);
@@ -87,7 +95,7 @@ public class Enemy extends JButton {
         }
     }
 
-    private void moveEnemy(Direction d){
+    private boolean moveEnemy(Direction d){
             int original_x = getX();
             int original_y = getY();
             int x = original_x;
@@ -108,13 +116,24 @@ public class Enemy extends JButton {
             }
             Rectangle r = new Rectangle(x, y, getWidth(), getHeight());
             if (game.checkColision(r))
-                return;
+                return true;
 
+            if (game.checkColisionWithEnemy(r, this))
+                return true;
             
             setLocation(x, y);
     
-            if (game.checkColision(r))
+            if (game.checkColision(r)){
                 setLocation(original_x, original_y);
+                return true;
+            }
+            
+            if (game.checkColisionWithEnemy(r, this)){
+                setLocation(original_x, original_y);
+                return true;
+            }
+
+            return false;
     }
 
 }

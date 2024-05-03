@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
 public class Game extends JPanel {
 
     private final int          numCoins = 10;
-    private final int          numEnemys= 20;   
+    private final int          numEnemys= 30;   
     private final Player       player;
     private final Vector<Coin> coins;
     private final Vector<Wall> walls;
@@ -53,7 +53,7 @@ public class Game extends JPanel {
             }
             @Override
             public void mouseReleased(MouseEvent e){
-                isMuseClicked = false;
+                isMuseClicked =Math.random() < 0.5;
             }
             @Override
             public void mouseClicked(MouseEvent e){
@@ -91,11 +91,12 @@ public class Game extends JPanel {
     }
 
 
-    public boolean checkColisionWithEnemy(Rectangle r){
+    public boolean checkColisionWithEnemy(Rectangle r, Enemy self){
         for (Enemy e : enemys){
-            if (e.getBounds().intersects(r)) {
-                return true;
-            }
+            if (!e.equals(self))
+                if (e.getBounds().intersects(r))
+                    return true;
+                
         }
         return false;
     }
