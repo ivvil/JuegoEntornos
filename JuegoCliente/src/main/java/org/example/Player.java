@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+
 import javax.swing.JButton;
 
 public class Player extends JButton {
@@ -16,7 +18,8 @@ public class Player extends JButton {
     private boolean isSPressed = false;
     private boolean isAPressed = false;
     private boolean isDPressed = false;
-    private double instantSpeed = maxSpeed;
+	private int[] timePressed = {0, 0, 0, 0};
+    private double instantSpeed = maxSpeed; // Why are maxSpeed and instantSpeed two different variables?
     private int health = maxHealth;
 
     private final Game game;
@@ -43,38 +46,50 @@ public class Player extends JButton {
         public void run() {
             while (true) {
                 if (isWPressed) {
+					timePressed[0]++;
                     if (instantSpeed == maxSpeed) {
                         if (isAPressed || isDPressed && !isSPressed)
                             instantSpeed = diagonalSpeed;
-                    } else if (!isAPressed && !isDPressed && !isSPressed)
-                        instantSpeed = maxSpeed;
-                    movePlayer(Direction.UP);
+					} else {
+						if (!isAPressed && !isDPressed && !isSPressed) instantSpeed = maxSpeed;
+						timePressed[0] = 0;
+					}
+
                 }
                 if (isSPressed) {
+					timePressed[1]++;
                     if (instantSpeed == maxSpeed) {
                         if (isAPressed || isDPressed && !isWPressed)
                             instantSpeed = diagonalSpeed;
-                    } else if (!isAPressed && !isDPressed && !isWPressed)
-                        instantSpeed = maxSpeed;
+                    } else {
+						if (!isAPressed && !isDPressed && !isWPressed) instantSpeed = maxSpeed;
+						timePressed[1] = 0;
+					}
 
                     movePlayer(Direction.DOWN);
                 }
                 if (isAPressed) {
+					timePressed[2]++;
                     if (instantSpeed == maxSpeed) {
                         if (isWPressed || isSPressed && !isDPressed)
                             instantSpeed = diagonalSpeed;
-                    } else if (!isWPressed && !isSPressed && !isDPressed)
-                        instantSpeed = maxSpeed;
+					} else {
+						if (!isWPressed && !isSPressed && !isDPressed) instantSpeed = maxSpeed;
+						timePressed[2] = 0;
 
+					}
                     movePlayer(Direction.LEFT);
 
                 }
                 if (isDPressed) {
+					timePressed[3]++;
                     if (instantSpeed == maxSpeed) {
                         if (isWPressed || isSPressed && !isAPressed)
                             instantSpeed = diagonalSpeed;
-                    } else if (!isWPressed && !isSPressed && !isAPressed)
-                        instantSpeed = maxSpeed;
+                    } else {
+						if (!isWPressed && !isSPressed && !isAPressed) instantSpeed = maxSpeed;
+						timePressed[3] = 0;
+					}
 
                     movePlayer(Direction.RIGHT);
                 }
@@ -83,6 +98,7 @@ public class Player extends JButton {
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
+				System.out.println(Arrays.toString(timePressed));
             }
         }
 
