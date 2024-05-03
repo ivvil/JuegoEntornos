@@ -5,80 +5,60 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.event.MouseEvent;
-import java.awt.Point;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
-import java.awt.event.MouseListener;
 
 public class Game extends JPanel {
 
-    private final int          numCoins = 10;
-    private final int          numEnemys= 30;   
-    private final Player       player;
+    private final int numCoins = 10;
+    private final int numEnemys = 30;
+    private final Player player;
     private final Vector<Coin> coins;
     private final Vector<Wall> walls;
     private final Vector<Enemy> enemys;
-    private final Game         gp = this;
+    private final Game gp = this;
     private final JLabel coinsCounter;
     private final JLabel playerHealth;
     private int coinsCount = 0;
     private final JFrame jf;
-    private static boolean isMuseClicked = false;
-    private static Point clickPosition = new Point();
+    private final JFrame mf;
+    private final int playerSize = 30;
 
-    public Game(int width, int height, JFrame frame) {
+    public Game(int width, int height, JFrame frame, JFrame menuFrame) {
         this.jf = frame;
+        this.mf = menuFrame;
         setSize(width, height);
         setLayout(new BorderLayout());
         coinsCounter = new JLabel("Coins: " + coinsCount);
         add(coinsCounter);
         coinsCounter.setBounds((width / 2) - 25, 0, width, 50);
 
-        int playerHeight = 50;
-        int playerWidth = 25;
         this.player = new Player(this);
         add(player);
+        player.setFont(new Font("Arial", Font.PLAIN, 12));
+        player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize + 20, playerSize);
 
         playerHealth = new JLabel("Health: " + player.getHealth());
         add(playerHealth);
-        playerHealth.setBounds((width / 2) - 25, 50, width, 50);
+        playerHealth.setBounds((width / 2) - playerSize, 50, width, 50);
 
-
-        addMouseListener(new MouseListener(){
-            @Override
-            public void mousePressed(MouseEvent e){
-                isMuseClicked = true;
-            }
-            @Override
-            public void mouseReleased(MouseEvent e){
-                isMuseClicked =Math.random() < 0.5;
-            }
-            @Override
-            public void mouseClicked(MouseEvent e){
-                clickPosition = e.getPoint();
-            }
-            @Override public void mouseEntered(MouseEvent e){}
-            @Override public void mouseExited(MouseEvent e){}
-        });
-        player.setBounds((width / 2) - playerWidth, (height / 2) - playerHeight, playerWidth, playerHeight);
         walls = new Vector<>();
         Wall w1 = new Wall(40, 900, 800, 10);
         add(w1);
         walls.add(w1);
         enemys = new Vector<>();
-        for (int i = 0; i < numEnemys; i++){
+        for (int i = 0; i < numEnemys; i++) {
             enemys.add(new Enemy(this));
             add(enemys.get(i));
         }
 
         coins = new Vector<>();
-        for (int i = 0; i < numCoins; i++){
+        for (int i = 0; i < numCoins; i++) {
             coins.add(new Coin(this));
             add(coins.get(i));
         }
-
 
         JLabel dummy = new JLabel(" ");
         add(dummy, BorderLayout.CENTER);
@@ -86,50 +66,51 @@ public class Game extends JPanel {
         it.start();
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
-
-    public boolean checkColisionWithEnemy(Rectangle r, Enemy self){
-        for (Enemy e : enemys){
+    public boolean checkColisionWithEnemy(Rectangle r, Enemy self) {
+        for (Enemy e : enemys) {
             if (!e.equals(self))
                 if (e.getBounds().intersects(r))
                     return true;
-                
+
         }
         return false;
     }
-    public boolean checkColision(Rectangle r){
-        for (Wall w : walls){
+
+    public boolean checkColision(Rectangle r) {
+        for (Wall w : walls) {
             if (w.isColiding(r)) {
                 return true;
             }
         }
         double x = r.getX();
         double y = r.getY();
-        if (x < 0 || x > getWidth() - r.getWidth()) return true;
-        if (y < 0 || y > getHeight() - r.getHeight()) return true;
+        if (x < 0 || x > getWidth() - r.getWidth())
+            return true;
+        if (y < 0 || y > getHeight() - r.getHeight())
+            return true;
 
         return false;
     }
 
-
-    public Vector<Wall> getWalls(){
+    public Vector<Wall> getWalls() {
         return walls;
     }
 
-    private void hideWindow(){
+    private void hideWindow() {
         jf.setVisible(false);
     }
 
-    class EventLoop extends Thread{
+    class EventLoop extends Thread {
         @Override
-        public void run(){
-            while (true){
+        public void run() {
+            while (true) {
                 Rectangle playerHitBox = player.getBounds();
-                for (int i = 0; i < coins.size(); i++){
-                    if (coins.get(i).getHitBox().intersects(playerHitBox)){
+                for (int i = 0; i < coins.size(); i++) {
+                    if (coins.get(i).getHitBox().intersects(playerHitBox)) {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
@@ -140,23 +121,23 @@ public class Game extends JPanel {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "You Win!");
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                    mf.setVisible(true);
                     return;
                 }
 
                 playerHealth.setText("Health: " + player.getHealth());
 
-                if (player.getHealth() <= 0){
+                if (player.getHealth() <= 0) {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "You Lose!");
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                    mf.setVisible(true);
                     return;
                 }
 
-
-
-                try{
+                try {
                     Thread.sleep(100);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
             }

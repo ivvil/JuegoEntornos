@@ -8,7 +8,8 @@ import java.awt.Color;
 public class Coin extends JLabel {
     private final Rectangle hitBox;
     private final Game game;
-    public Coin(Game game){
+
+    public Coin(Game game) {
         this.game = game;
         setText("O");
         setFont(new Font("Sans Serif", Font.BOLD, 16));
@@ -21,17 +22,16 @@ public class Coin extends JLabel {
         return hitBox;
     }
 
-    private Rectangle genRandomPosition(){
+    private Rectangle genRandomPosition() {
         int size = 20;
         Rectangle r;
-        do{
+        do {
             r = new Rectangle(
-                (int)(Math.random() * game.getWidth()) - 100,
-                (int)(Math.random() * game.getHeight()) - 100,
-                size,
-                size
-            );
-        }while (game.checkColision(r));
+                    (int) (Math.random() * game.getWidth()) - 100,
+                    (int) (Math.random() * game.getHeight()) - 100,
+                    size,
+                    size);
+        } while (game.checkColision(r));
         return r;
     }
 }
