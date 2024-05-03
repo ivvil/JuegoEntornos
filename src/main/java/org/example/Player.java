@@ -8,17 +8,27 @@ import javax.swing.JButton;
 public class Player extends JButton {
     private double    maxSpeed     = 3;
     private final int sleepTime    = 6;
+    private final int maxHealth    = 10;
     private boolean isWPressed     = false;
     private boolean isSPressed     = false;
     private boolean isAPressed     = false;
     private boolean isDPressed     = false;
     private double instantSpeed    = maxSpeed;
+    private int health             = maxHealth;
 
     private final Game game;
 
     public Player(Game game){
         handleMovement();
         this.game = game;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 
     private class KeyHandler extends Thread{
@@ -100,9 +110,7 @@ public class Player extends JButton {
         kh.start();
     }
 
-    private enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
+    
 
     private void movePlayer(Direction d) {
         int original_x = getX();

@@ -15,11 +15,14 @@ import java.awt.event.MouseListener;
 public class Game extends JPanel {
 
     private final int          numCoins = 10;
+    private final int          numEnemys= 20;   
     private final Player       player;
     private final Vector<Coin> coins;
     private final Vector<Wall> walls;
+    private final Vector<Enemy> enemys;
     private final Game         gp = this;
     private final JLabel coinsCounter;
+    private final JLabel playerHealth;
     private int coinsCount = 0;
     private final JFrame jf;
     private static boolean isMuseClicked = false;
@@ -32,10 +35,17 @@ public class Game extends JPanel {
         coinsCounter = new JLabel("Coins: " + coinsCount);
         add(coinsCounter);
         coinsCounter.setBounds((width / 2) - 25, 0, width, 50);
+
         int playerHeight = 50;
         int playerWidth = 25;
         this.player = new Player(this);
         add(player);
+
+        playerHealth = new JLabel("Health: " + player.getHealth());
+        add(playerHealth);
+        playerHealth.setBounds((width / 2) - 25, 50, width, 50);
+
+
         addMouseListener(new MouseListener(){
             @Override
             public void mousePressed(MouseEvent e){
@@ -57,11 +67,16 @@ public class Game extends JPanel {
         Wall w1 = new Wall(40, 900, 800, 10);
         add(w1);
         walls.add(w1);
+        enemys = new Vector<>();
+        for (int i = 0; i < numEnemys; i++){
+            enemys.add(new Enemy(this));
+            add(enemys.get(i));
+        }
+
         coins = new Vector<>();
         for (int i = 0; i < numCoins; i++){
             coins.add(new Coin(this));
             add(coins.get(i));
-            coins.get(i).setBounds(coins.get(i).getHitBox());
         }
 
 
@@ -71,6 +86,19 @@ public class Game extends JPanel {
         it.start();
     }
 
+    public Player getPlayer(){
+        return player;
+    }
+
+
+    public boolean checkColisionWithEnemy(Rectangle r){
+        for (Enemy e : enemys){
+            if (e.getBounds().intersects(r)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean checkColision(Rectangle r){
         for (Wall w : walls){
             if (w.isColiding(r)) {
@@ -113,6 +141,18 @@ public class Game extends JPanel {
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
                     return;
                 }
+
+                playerHealth.setText("Health: " + player.getHealth());
+
+                if (player.getHealth() <= 0){
+                    gp.hideWindow();
+                    JOptionPane.showMessageDialog(null, "You Lose!");
+                    gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                    return;
+                }
+
+
+
                 try{
                     Thread.sleep(100);
                 }catch (InterruptedException e){
