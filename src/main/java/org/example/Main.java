@@ -1,5 +1,8 @@
 package org.example;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
+import javax.swing.UIManager;
 import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -7,6 +10,11 @@ import java.awt.Toolkit;
 public class Main {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();

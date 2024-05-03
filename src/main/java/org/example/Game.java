@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
@@ -19,6 +21,8 @@ public class Game extends JPanel {
     private final JLabel coinsCounter;
     private int coinsCount = 0;
     private final JFrame jf;
+    private static boolean isMuseClicked = false;
+    private static Point clickPosition = new Point();
 
     public Game(int width, int height, JFrame frame) {
         this.jf = frame;
@@ -31,10 +35,11 @@ public class Game extends JPanel {
         int playerWidth = 25;
         this.player = new Player(this);
         add(player);
+        addMouseListener(new MouseListener());
         player.setBounds((width / 2) - playerWidth, (height / 2) - playerHeight, playerWidth, playerHeight);
         walls = new Vector<>();
         Wall w1 = new Wall();
-        w1.setBounds(40, 40, 800, 10);
+        w1.setBounds(40, 900, 800, 10);
         add(w1);
         walls.add(w1);
         coins = new Vector<>();
@@ -73,6 +78,24 @@ public class Game extends JPanel {
     private void hideWindow(){
         jf.setVisible(false);
     }
+
+    private static class MouseListener implements java.awt.event.MouseListener {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            isMuseClicked = true;
+        }
+
+        @Override public void mouseReleased(MouseEvent e) {
+                isMuseClicked = false;
+        }
+
+        @Override public void mouseClicked(MouseEvent e) {
+            clickPosition = e.getPoint();
+        }
+        @Override public void mouseEntered(MouseEvent e) {}
+        @Override public void mouseExited(MouseEvent e) {}
+    }
+
 
     class EventLoop extends Thread{
         @Override
