@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
 public class Player extends JButton {
+	// TODO Rip out this fucking piece of trash
+	
     private double maxSpeed = 3;
     private final int sleepTime = 6;
     private final int maxHealth = 10;
