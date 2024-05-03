@@ -24,7 +24,7 @@ public class Game extends JPanel {
     private int coinsCount = 0;
     private final JFrame jf;
     private final JFrame mf;
-    private final int playerSize = 30;
+    private final int playerSize = 50;
 
     public Game(int width, int height, JFrame frame, JFrame menuFrame) {
         this.jf = frame;
@@ -37,8 +37,8 @@ public class Game extends JPanel {
 
         this.player = new Player(this);
         add(player);
-        player.setFont(new Font("Arial", Font.PLAIN, 12));
-        player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize + 20, playerSize);
+        player.setFont(new Font("Arial", Font.PLAIN, 15));
+        player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
 
         playerHealth = new JLabel("Health: " + player.getHealth());
         add(playerHealth);
