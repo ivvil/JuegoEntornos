@@ -99,6 +99,10 @@ public class Game extends JPanel {
         return false;
     }
 
+    protected JFrame getFrame() {
+        return jf;
+    }
+
     public Vector<Wall> getWalls() {
         return walls;
     }
@@ -123,7 +127,7 @@ public class Game extends JPanel {
                 if (coinsCount >= 10) {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "You Win!");
-                    gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
+                    gp.getFrame().dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
                     mf.setVisible(true);
                     return;
                 }
