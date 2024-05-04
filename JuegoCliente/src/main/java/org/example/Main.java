@@ -12,16 +12,16 @@ import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
 
-        //System.setProperty("sun.java2d.opengl", "true");
+        if (!System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia") && System.getProperty("os.name").equals("Linux")) // If not nvidia and linux
+            System.setProperty("sun.java2d.opengl", "True");
+            
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (Exception e) {
@@ -90,9 +90,8 @@ public class Main {
         if (gameFrame[0] != null)
             gameFrame[0].dispose();
         gameFrame[0] = new JFrame("Game");
-        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-        int frameWidth = (int) size.getWidth() - 100;
-        int frameHeight = (int) size.getHeight() - 100;
+        int frameWidth = 1900;
+        int frameHeight = 1060;
         Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame);
         game.getPlayer().setBackground(playerColor);
         float[] hsb = Color.RGBtoHSB(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), null);

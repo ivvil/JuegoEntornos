@@ -1,8 +1,6 @@
 package org.example;
 
-import java.awt.Color;
-import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
@@ -26,6 +24,26 @@ public class Player extends JButton {
         this.game = game;
         setBackground(new Color(74, 196, 250));
         setText("•.•");
+        new Thread(() -> {
+            int len = 0;
+            while (true) {
+                long frameStart = System.nanoTime();
+                game.revalidate();
+                long frameEnd = System.nanoTime();
+                double frameRate = 1000000000.0 / (frameEnd - frameStart);
+                String fps = String.format("FPS: %.2f", frameRate);
+                System.out.println(fps);
+                len = fps.length();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                }
+                System.out.print("\033[1F\033[" + len + "J");
+                System.out.flush();
+            }
+        }).start();
     }
 
     public int getHealth() {
@@ -85,7 +103,6 @@ public class Player extends JButton {
                 }
             }
         }
-
     }
 
     private void handleMovement() {
