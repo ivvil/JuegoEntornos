@@ -5,7 +5,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
@@ -38,7 +37,6 @@ public class Game extends JPanel {
         // Define player                        vscode -> MARK: player
         this.player = new Player(this);
         add(player);
-        player.setFont(new Font("Arial", Font.PLAIN, 15));
         player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
 
         playerHealth = new JLabel("Health: " + player.getHealth());
@@ -54,6 +52,9 @@ public class Game extends JPanel {
         for (int i = 0; i < numEnemys; i++) {
             enemys.add(new Enemy(this));
             add(enemys.get(i));
+        }
+        for (Enemy i : enemys) {
+            i.startMove();
         }
         
         // Define coins                         vscode -> MARK: coins

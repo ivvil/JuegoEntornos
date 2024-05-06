@@ -9,8 +9,8 @@
 
 - [ ] Single player mode:
   - [x] Base game logic - victor
-  - [ ] Improve gameplay - iván
-      - [ ] Improve movement
+  - [ ] Improve gameplay - ivan
+      - [x] Improve movement - victor
   - [ ] Add levels (arenas) - ?
   - [ ] Refactor the way enemies work - ?
 
@@ -18,16 +18,18 @@
   - [ ] Client:
     - [x] Define a packet structure - victor
     - [ ] Refactor the way enemies work - ?
-    - [ ] Listen for server sent packets - ?
+    - [x] Listen for server sent packets - victor
+    - [ ] Handle server sent packets - ?
     - [ ] Interprete server sent packets - ?
     - [ ] Send inputs to server - ?
     - [ ] Menu for connecting to server - ?
 
   - [ ] Server:
-    - [ ] Define a packet structure - victor
-    - [ ] Listen for packets and send them to all clients - ?
+    - [x] Define a packet structure - victor
+    - [x] Listen for packets and send them to all clients - victor
     - [ ] Workout how to shut down the server - ?
     - [ ] Checks fow when the match is over - ?
+    - [ ] Send level data / enemy data to client on join - ?
 
 ## Movement ideas 
 

@@ -1,29 +1,39 @@
-package org.example;
+package org.example.multiplayer;
 
-import java.awt.Font;
-import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 
-public class Player extends JButton {
-	
+import org.example.Direction;
+import org.example.Wall;
+
+import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+
+public class MPPlayer extends JButton {
+    private final int rgb;
+    private final boolean isSelf;
+
     private double maxSpeed = 3;
     private final int sleepTime = 6;
     private final int maxHealth = 10;
+
+    
     private double instantSpeed = maxSpeed;
     private int health = maxHealth;
-    private final Game game;
-
+    
+    private final MPGame game;
     // [0, 0] : Nothing pressed | [1, 0] : W pressed | [0, 1] : A pressed | [1, 1] : W and A pressed
     //[-1 , 0]: S pressed | [0, -1] : D pressed | [-1, -1] : S and D pressed | [1, -1] : W and D pressed | [-1, 1] : S and A pressed
-    private final byte[] inputMap = new byte[2];
-
-    public Player(Game game) {
+    private final byte[] inputMap = new byte[2]; 
+    
+    public MPPlayer(int rgb, boolean isSelf, MPGame game){
+        this.rgb = rgb;
+        this.isSelf = isSelf;
         this.game = game;
-        setupInputListener();
-        setFont(new Font("Arial", Font.PLAIN, 15));
-        setText("•.•");
+        if (isSelf){
+            setupInputListener();
+        }
     }
 
     public int getHealth() {
@@ -33,6 +43,7 @@ public class Player extends JButton {
     public void setHealth(int health) {
         this.health = health;
     }
+
 
     private class MovePlayer extends Thread {
         private final double diagonalSpeed = 0.7071067811865476 * maxSpeed; // Math.cos(Math.PI/4) * maxSpeed;
@@ -56,11 +67,8 @@ public class Player extends JButton {
                 
                 if (inputMap[1] == -1)
                     movePlayer(Direction.RIGHT, instantSpeed);
-                try{
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                
+                
             }
         }
     }
@@ -113,33 +121,44 @@ public class Player extends JButton {
     }
 
 
-
-    private void movePlayer(Direction d, double speed) {
-        int original_x = getX();
-        int original_y = getY();
-        int x = original_x;
-        int y = original_y;
-        
-        switch (d) {
+    private void movePlayer(Direction direction, double speed){
+        Point pos = getLocation();
+        switch (direction){
             case UP:
-                y -= (int) Math.round(speed);
+                pos.y -= speed;
                 break;
             case DOWN:
-                y += (int) Math.round(speed);
+                pos.y += speed;
                 break;
             case LEFT:
-                x -= (int) Math.round(speed);
+                pos.x -= speed;
                 break;
             case RIGHT:
-                x += (int) Math.round(speed);
+                pos.x += speed;
                 break;
         }
-        if (game.checkColision(new Rectangle(x, y, getWidth(), getHeight())))
-            return;
-
-        setLocation(x, y);
-
-        if (game.checkColision(new Rectangle(x, y, getWidth(), getHeight())))
-            setLocation(original_x, original_y);
+        Rectangle r = new Rectangle(pos.x, pos.y, getWidth(), getHeight());
+        if (!checkColision(r)){
+            setLocation(pos);
+        }
     }
+
+    public boolean checkColision(Rectangle r) {
+        double x = r.getX();
+        double y = r.getY();
+        if (x < 0 || x > 1900 - r.getWidth())
+            return true;
+        if (y < 0 || y > 1060 - r.getHeight())
+            return true;
+            
+        for (Wall w : game.getWalls()) {
+            if (w.isColiding(r)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    
 }
