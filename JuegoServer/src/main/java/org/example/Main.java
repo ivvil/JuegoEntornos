@@ -54,7 +54,7 @@ public class Main {
                 pool.execute(() -> {
                     onClientConnect(socket);
                     try{
-                        poocessRequest(socket);
+                        processRequest(socket);
                     } catch (IOException e){
                         error("Error while processing request: " + e.getMessage());
                     }
@@ -117,7 +117,7 @@ public class Main {
 
     }
 
-    private static void poocessRequest(Socket socket) throws IOException {
+    private static void processRequest(Socket socket) throws IOException {
         clients.add(socket);
         ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
