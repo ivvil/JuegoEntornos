@@ -130,7 +130,6 @@ public class Game extends JPanel {
                 }
 
 				mm.update((float) delta);
-
 				
                 Rectangle playerHitBox = player.getBounds();
                 for (int i = 0; i < coins.size(); i++) {

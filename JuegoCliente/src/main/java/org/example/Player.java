@@ -14,9 +14,10 @@ import org.example.datatypes.Vector2;
 public class Player extends JButton {
 	// TODO Rip out this fucking piece of trash
 	
-    private double maxSpeed = 1;
+    private double maxSpeed = 0.002;
 	private double acceleration = 0.02;
-	private double friction = 1;
+	private double friction = 2;
+	
     private final int maxHealth = 10;
     private double instantSpeed = maxSpeed; // Why are maxSpeed and instantSpeed two different variables?
     private int health = maxHealth;

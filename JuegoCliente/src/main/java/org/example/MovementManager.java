@@ -37,6 +37,8 @@ public class MovementManager {
 
         velocity.add(acceleration).add(friction).clamp(player.getMaxSpeed());
 
+		System.out.println(velocity);
+
         player.setPosition(player.getPosition().add(velocity.x * deltaTime, velocity.y * deltaTime));
     }
 }
@@ -87,9 +89,6 @@ class Input {
         @Override
         public void actionPerformed(ActionEvent e) {
             keyState.put(keyCode, pressed);
-
-			System.out.println(keyState);
-
         }
     }
 }

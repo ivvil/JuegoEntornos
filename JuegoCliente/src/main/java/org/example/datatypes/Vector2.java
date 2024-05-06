@@ -15,10 +15,10 @@ public class Vector2 {
 	}
 
 	public double length() {
-        return Math.sqrt(x * x + y * y);
-    }
+		return Math.sqrt(x * x + y * y);
+	}
 
-    public Vector2 normalize() {
+	public Vector2 normalize() {
         double len = length();
         return new Vector2(x / len, y / len);
     }
@@ -57,5 +57,10 @@ public class Vector2 {
 
 	public static Point2 toPoint2(Vector2 v) {
 		return new Point2(v.x, v.y);
+	}
+
+	@Override
+	public String toString() {
+		return "Vector2 [x=" + x + ", y=" + y + "]";
 	}
 }
