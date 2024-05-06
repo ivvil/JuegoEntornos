@@ -1,6 +1,8 @@
 package org.example.packets;
 
-public class EnemyPacket {
+import java.io.Serializable;
+
+public class EnemyPacket implements Serializable{
     private int x;
     private int y;
     private boolean direction;

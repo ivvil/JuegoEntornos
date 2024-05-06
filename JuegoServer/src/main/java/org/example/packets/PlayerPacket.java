@@ -1,8 +1,9 @@
 package org.example.packets;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class PlayerPacket {
+public class PlayerPacket implements Serializable{
     private int x;
     private int y;
     private int rgb;
