@@ -19,7 +19,7 @@ import java.awt.event.WindowEvent;
 public class Main {
     public static void main(String[] args) {
 
-        if (!System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia") && System.getProperty("os.name").equals("Linux")) // If not nvidia and linux
+        if (System.getenv("__GLX_VENDOR_LIBRARY_NAME") != null && !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia") && System.getProperty("os.name").equals("Linux")) // If not nvidia and linux
             System.setProperty("sun.java2d.opengl", "True");
             
         try {
