@@ -8,10 +8,15 @@ import java.util.Arrays;
 
 import javax.swing.JButton;
 
+import org.example.datatypes.Point2;
+import org.example.datatypes.Vector2;
+
 public class Player extends JButton {
 	// TODO Rip out this fucking piece of trash
 	
     private double maxSpeed = 3;
+	private double acceleration = 0.2;
+	private double friction = 0.1;
     private final int sleepTime = 6;
     private final int maxHealth = 10;
     private boolean isWPressed = false;
@@ -39,6 +44,30 @@ public class Player extends JButton {
         this.health = health;
     }
 
+	public double getAcceleration() {
+		return acceleration;
+	}
+
+	public double getFriction() {
+		return friction;
+	}
+
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public Point2 getPosition() {
+		return new Point2(getX(), getY());
+	}
+
+	public void setPosition(Point2 p) {
+		setLocation((int) p.x, (int) p.y);
+	}
+
+	public void move(Vector2 v) {
+		setPosition(Vector2.toPoint2(Vector2.add(v, Point2.toVector2(getPosition()))));
+	}
+	
     private class KeyHandler extends Thread {
         private final double diagonalSpeed = 0.7071067811865476 * maxSpeed; // Math.cos(Math.PI/4) * maxSpeed;
 
@@ -137,7 +166,7 @@ public class Player extends JButton {
             return false;
         });
         KeyHandler kh = new KeyHandler();
-        kh.start();
+        // kh.start();
     }
 
     private void movePlayer(Direction d) {

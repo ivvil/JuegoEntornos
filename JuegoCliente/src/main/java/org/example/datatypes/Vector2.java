@@ -1,4 +1,4 @@
-package org.example.Datatypes;
+package org.example.datatypes;
 
 public class Vector2 {
 	public double x;
@@ -43,5 +43,13 @@ public class Vector2 {
 			v = v.normalize().scale(min);
 		}
 		return v;
+	}
+
+	public static Vector2 add(Vector2 a, Vector2 b) {
+		return new Vector2(a.x + b.x, a.y + b.y);
+	}
+
+	public static Point2 toPoint2(Vector2 v) {
+		return new Point2(v.x, v.y);
 	}
 }

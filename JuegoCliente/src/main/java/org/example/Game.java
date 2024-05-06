@@ -37,6 +37,7 @@ public class Game extends JPanel {
 
         // Define player                        vscode -> MARK: player
         this.player = new Player(this);
+		new MovementManager(player, this);
         add(player);
         player.setFont(new Font("Arial", Font.PLAIN, 15));
         player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
