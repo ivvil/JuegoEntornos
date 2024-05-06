@@ -14,16 +14,10 @@ import org.example.datatypes.Vector2;
 public class Player extends JButton {
 	// TODO Rip out this fucking piece of trash
 	
-    private double maxSpeed = 3;
-	private double acceleration = 0.2;
-	private double friction = 0.1;
-    private final int sleepTime = 6;
+    private double maxSpeed = 1;
+	private double acceleration = 0.02;
+	private double friction = 1;
     private final int maxHealth = 10;
-    private boolean isWPressed = false;
-    private boolean isSPressed = false;
-    private boolean isAPressed = false;
-    private boolean isDPressed = false;
-	private int[] timePressed = {0, 0, 0, 0};
     private double instantSpeed = maxSpeed; // Why are maxSpeed and instantSpeed two different variables?
     private int health = maxHealth;
 
