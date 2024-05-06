@@ -27,12 +27,12 @@ public class Vector2 {
         return new Vector2(x * factor, y * factor);
     }
 
-	public static Vector2 clamp(Vector2 v, double max) {
-		double length = v.length();
+	public Vector2 clamp(double max) {
+		double length = length();
 		if (length > max) {
-			v = v.normalize().scale(max);
+			normalize().scale(max);
 		}
-		return v;
+		return this;
 	}
 
 	public static Vector2 clamp(Vector2 v, double min, double max) {
@@ -45,9 +45,15 @@ public class Vector2 {
 		return v;
 	}
 
-	public static Vector2 add(Vector2 a, Vector2 b) {
-		return new Vector2(a.x + b.x, a.y + b.y);
-	}
+	public Vector2 add(Vector2 other) {
+        this.x += other.x;
+        this.y += other.y;
+        return this;
+    }
+
+	public Vector2 copy() {
+        return new Vector2(this.x, this.y);
+    }
 
 	public static Point2 toPoint2(Vector2 v) {
 		return new Point2(v.x, v.y);

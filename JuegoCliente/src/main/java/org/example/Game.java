@@ -25,6 +25,7 @@ public class Game extends JPanel {
     private final JFrame mf;
     private final int playerSize = 50;
     private int coinsCount = 0;
+	private MovementManager mm;
 
     public Game(int width, int height, JFrame frame, JFrame menuFrame) {
         this.jf = frame;
@@ -37,7 +38,10 @@ public class Game extends JPanel {
 
         // Define player                        vscode -> MARK: player
         this.player = new Player(this);
-		new MovementManager(player, this);
+		mm = new MovementManager(player);
+
+		Input.initialize(this);
+		
         add(player);
         player.setFont(new Font("Arial", Font.PLAIN, 15));
         player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
@@ -109,9 +113,25 @@ public class Game extends JPanel {
     }
 
     class EventLoop extends Thread {
+		long lastTime = System.nanoTime();
+		final double nsPerTick = 1_000_000_000D / 60D;
+		double delta = 0;
+		int frames = 0;
+		long timer = System.currentTimeMillis();
+		
         @Override
         public void run() {
             while (true) {
+				long now = System.nanoTime();
+				delta += (now - lastTime) / nsPerTick;
+                lastTime = now;
+                if (delta >= 1) {
+                    delta--;
+                }
+
+				mm.update((float) delta);
+
+				
                 Rectangle playerHitBox = player.getBounds();
                 for (int i = 0; i < coins.size(); i++) {
                     if (coins.get(i).getHitBox().intersects(playerHitBox)) {
