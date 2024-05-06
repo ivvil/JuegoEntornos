@@ -20,16 +20,16 @@ public class MovementManager {
     public void update(float deltaTime) {
         Vector2 acceleration = new Vector2();
         if (Input.isKeyPressed(KeyEvent.VK_W)) {
-            acceleration.x += 1;
+            acceleration.y -= 1;
         }
         if (Input.isKeyPressed(KeyEvent.VK_S)) {
-            acceleration.x -= 1;
-        }
-        if (Input.isKeyPressed(KeyEvent.VK_A)) {
             acceleration.y += 1;
         }
+        if (Input.isKeyPressed(KeyEvent.VK_A)) {
+            acceleration.x -= 1;
+        }
         if (Input.isKeyPressed(KeyEvent.VK_D)) {
-            acceleration.y -= 1;
+            acceleration.x += 1;
         }
         acceleration.normalize().scale(player.getAcceleration());
 
