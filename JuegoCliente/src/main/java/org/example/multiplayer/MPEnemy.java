@@ -37,7 +37,7 @@ public class MPEnemy extends JButton {
                     (int) (Math.random() * game.getHeight()) - 100,
                     size,
                     size);
-        } while (game.checkColision(r) || game.checkColisionWithEnemy(r, this));
+        } while (game.checkColisionWithEnemy(r, this));
         return r;
     }
 
@@ -93,6 +93,7 @@ public class MPEnemy extends JButton {
                     setLocation(genRandomPosition().getLocation());
                     this.direction = random.nextBoolean();
                     this.axis = random.nextBoolean();
+                    game.getConnection().sendEnemyMove(getLocation(), axis, direction);
                 }
                 try {
                     Thread.sleep(sleepTime);

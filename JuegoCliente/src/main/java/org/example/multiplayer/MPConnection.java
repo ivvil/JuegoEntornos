@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import org.example.packets.EnemyPacket;
 import org.example.packets.PlayerPacket; 
 
 public class MPConnection {
@@ -43,6 +44,14 @@ public class MPConnection {
             System.out.println("Error: " + e.getMessage());
         }
     }
+    public void sendEnemyMove(Point p, boolean axis, boolean direction){
+        EnemyPacket packet = new EnemyPacket(p.x, p.y, axis, direction);
+        try{
+            objOut.writeObject(packet);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
     public void initListener(){
         new Thread(() -> {
@@ -51,8 +60,9 @@ public class MPConnection {
                     Object o = objIn.readObject();
                     if (o instanceof PlayerPacket pp){
                         System.out.println("Player packet received: " + pp);
+                        // TODO: Create the instances for the players
                     }
-                    // TODO: Handle more inputs
+                    // TODO: Recive enemy packets and interprete the,
                 }catch (Exception e){
                     System.out.println("Error: " + e.getMessage());
                 }

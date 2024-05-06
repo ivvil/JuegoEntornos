@@ -10,7 +10,10 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import org.example.packets.EnemyPacket;
+import org.example.packets.GamePacket;
 import org.example.packets.PlayerPacket;
+import org.example.packets.WallPacket;
 
 import static org.example.Logger.*;
 
@@ -58,6 +61,33 @@ public class Main {
         }
     }
 
+    public static void startGame(){
+        for(Socket s : clients){
+            try{
+                ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
+                WallPacket[] walls = new WallPacket[]{
+                    // TODO: Add walls describing the level
+                };
+                // TODO: Add the players (Connections) and enemys (generate)
+                objOut.writeObject(new GamePacket(walls,...));
+            } catch (IOException e){
+                error("Error while sending game packet to client: " + e.getMessage());
+            }
+        }
+    }
+
+    public static void onClientConnect(Socket socket){
+        clients.add(socket);
+        try{
+            ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
+
+
+        }catch (IOException e){
+            error("Error while creating output stream: " + e.getMessage());
+        }
+
+    }
+
     private static void poocessRequest(Socket socket) throws IOException {
         clients.add(socket);
         ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
@@ -80,6 +110,20 @@ public class Main {
                     }
                 }
 
+            }else if(o instanceof EnemyPacket ep){
+                info("Enemy packet received: " + ep);
+                for (Socket s : clients){
+                    if (s != socket){
+                        pool.execute(() -> {
+                            try{
+                                ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                                out.writeObject(ep);
+                            } catch (IOException e){
+                                error("Error while sending packet to client: " + e.getMessage());
+                            }
+                        });
+                    }
+                }
             }
         }catch (Exception e){
             error("Coudnt process request from:  " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + " -> " + e.getMessage());

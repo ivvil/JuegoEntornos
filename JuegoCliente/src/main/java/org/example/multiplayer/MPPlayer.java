@@ -138,27 +138,9 @@ public class MPPlayer extends JButton {
                 break;
         }
         Rectangle r = new Rectangle(pos.x, pos.y, getWidth(), getHeight());
-        if (!checkColision(r)){
+        if (!game.checkColision(r)){
             setLocation(pos);
         }
-    }
-
-    public boolean checkColision(Rectangle r) {
-        double x = r.getX();
-        double y = r.getY();
-        if (x < 0 || x > 1900 - r.getWidth())
-            return true;
-        if (y < 0 || y > 1060 - r.getHeight())
-            return true;
-            
-        for (Wall w : game.getWalls()) {
-            if (w.isColiding(r)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    
+        game.getConnection().sendPlayerMove(pos);
+    }  
 }

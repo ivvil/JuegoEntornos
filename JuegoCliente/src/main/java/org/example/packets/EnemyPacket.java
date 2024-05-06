@@ -3,10 +3,14 @@ package org.example.packets;
 public class EnemyPacket {
     private int x;
     private int y;
+    private boolean direction;
+    private boolean axis;
 
-    public EnemyPacket(int x, int y, int width, int height, int speed, int sleepTime) {
+    public EnemyPacket(int x, int y, boolean axis, boolean direction) {
         this.x = x;
         this.y = y;
+        this.axis = axis;
+        this.direction = direction;
     }
 
     public int getX() {
@@ -15,5 +19,11 @@ public class EnemyPacket {
 
     public int getY() {
         return y;
+    }
+    public boolean getAxis() {
+        return axis;
+    }
+    public boolean getDirection() {
+        return direction;
     }
 }
