@@ -22,6 +22,8 @@ public class Main {
     private static ServerSocket serverSocket = null;
     private static ThreadPool pool = null;
     private static Vector<Socket> clients = new Vector<>();
+    private static GamePacket gamePacket = null;
+    private static int numEnemis = 10;
 
 
     public static void main(String[] args) {
@@ -68,8 +70,9 @@ public class Main {
                 WallPacket[] walls = new WallPacket[]{
                     // TODO: Add walls describing the level
                 };
-                // TODO: Add the players (Connections) and enemys (generate)
-                objOut.writeObject(new GamePacket(walls,...));
+
+                gamePacket = new GamePacket(walls, (int) (Math.random() * 1000));
+                objOut.writeObject(gamePacket);
             } catch (IOException e){
                 error("Error while sending game packet to client: " + e.getMessage());
             }
@@ -80,7 +83,20 @@ public class Main {
         clients.add(socket);
         try{
             ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
+            PlayerPacket pp = null;
+            try {
+                Object o = objIn.readObject();
+                if (o instanceof PlayerPacket){
+                    pp = (PlayerPacket) o;
+                    info("Player packet received: " + pp);
+                }else{
+                    error("Invalid packet received: " + o + " " + o.getClass());
+                }
+            } catch (Exception e){
+                error("Error while receiving player packet: " + e.getMessage());
 
+            }
 
         }catch (IOException e){
             error("Error while creating output stream: " + e.getMessage());
