@@ -22,12 +22,16 @@ public class Main {
     private static ServerSocket serverSocket = null;
     private static ThreadPool pool = null;
     private static Vector<Socket> clients = new Vector<>();
+    private static Vector<PlayerPacket> players = new Vector<>();
     private static GamePacket gamePacket = null;
     private static int numEnemis = 10;
 
 
     public static void main(String[] args) {
         int maxWorkers = Runtime.getRuntime().availableProcessors();
+        gamePacket = new GamePacket(new WallPacket[]{
+            // TODO: Add walls describing the level
+        }, (int) (Math.random() * 1000));
 
         int workers = Integer.parseInt(JOptionPane.showInputDialog("How many workers do you want to use?"));
         if (workers > maxWorkers) {
@@ -48,6 +52,7 @@ public class Main {
                 Socket socket = serverSocket.accept();
                 info("Client connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 pool.execute(() -> {
+                    onClientConnect(socket);
                     try{
                         poocessRequest(socket);
                     } catch (IOException e){
@@ -67,11 +72,6 @@ public class Main {
         for(Socket s : clients){
             try{
                 ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
-                WallPacket[] walls = new WallPacket[]{
-                    // TODO: Add walls describing the level
-                };
-
-                gamePacket = new GamePacket(walls, (int) (Math.random() * 1000));
                 objOut.writeObject(gamePacket);
             } catch (IOException e){
                 error("Error while sending game packet to client: " + e.getMessage());
@@ -84,18 +84,31 @@ public class Main {
         try{
             ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
-            PlayerPacket pp = null;
+            PlayerPacket[] pp = new PlayerPacket[1];
+            Object o = null;
             try {
-                Object o = objIn.readObject();
+                 o = objIn.readObject();
                 if (o instanceof PlayerPacket){
-                    pp = (PlayerPacket) o;
-                    info("Player packet received: " + pp);
+                    pp[0] = (PlayerPacket) o;
+                    info("Player packet received: " + pp[0]);
                 }else{
                     error("Invalid packet received: " + o + " " + o.getClass());
                 }
-            } catch (Exception e){
-                error("Error while receiving player packet: " + e.getMessage());
+            } catch (ClassNotFoundException e){
+                error("Coudn't read object: " + e.getMessage());
+            }
 
+            objOut.writeObject(gamePacket);
+            for (Socket s : clients){
+                if (s != socket){
+                    pool.execute(() -> {
+                        try{
+                            objOut.writeObject(pp[0]);
+                        } catch (IOException e){
+                            error("Error while sending packet to client: " + e.getMessage() + " " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
+                        }
+                    });
+                }
             }
 
         }catch (IOException e){
@@ -108,7 +121,7 @@ public class Main {
         clients.add(socket);
         ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
-        // TODO: Send initial data to the client
+        
         try {
             Object o = objIn.readObject();
             if (o instanceof PlayerPacket pp){

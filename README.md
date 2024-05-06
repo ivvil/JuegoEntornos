@@ -29,7 +29,9 @@
     - [x] Listen for packets and send them to all clients - victor
     - [ ] Workout how to shut down the server - ?
     - [ ] Checks fow when the match is over - ?
-    - [ ] Send level data / enemy data to client on join - ?
+    - [x] Send level data / enemy data to client on join - victor
+    - [x] Send initial data to player - victor
+    - [ ] Workout how to start the game - ?
 
 ## Movement ideas 
 

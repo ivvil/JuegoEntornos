@@ -1,10 +1,7 @@
 package org.example.multiplayer;
 
 import javax.swing.JButton;
-
 import org.example.Direction;
-import org.example.Wall;
-
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -25,7 +22,7 @@ public class MPPlayer extends JButton {
     private final MPGame game;
     // [0, 0] : Nothing pressed | [1, 0] : W pressed | [0, 1] : A pressed | [1, 1] : W and A pressed
     //[-1 , 0]: S pressed | [0, -1] : D pressed | [-1, -1] : S and D pressed | [1, -1] : W and D pressed | [-1, 1] : S and A pressed
-    private final byte[] inputMap = new byte[2]; 
+    private final byte[] inputMap = new byte[2];
     
     public MPPlayer(int rgb, boolean isSelf, MPGame game){
         this.rgb = rgb;
