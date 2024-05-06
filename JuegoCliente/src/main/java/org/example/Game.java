@@ -53,6 +53,9 @@ public class Game extends JPanel {
             enemys.add(new Enemy(this));
             add(enemys.get(i));
         }
+        for (Enemy i : enemys) {
+            i.startMove();
+        }
         
         // Define coins                         vscode -> MARK: coins
         coins = new Vector<>();

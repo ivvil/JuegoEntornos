@@ -2,7 +2,6 @@ package org.example;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-
 import javax.swing.JButton;
 
 public class Enemy extends JButton {
@@ -16,6 +15,9 @@ public class Enemy extends JButton {
         setBounds(genRandomPosition());
         setBackground(new Color(255, 50, 50));
         setForeground(new Color(0, 0, 0));
+    }
+
+    public void startMove(){
         Movement movement = new Movement();
         movement.start();
     }
