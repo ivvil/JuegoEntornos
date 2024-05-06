@@ -6,13 +6,16 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Vector;
 
+import javax.swing.JPanel;
+
 import org.example.Wall;
 
-public class MPGame {
+public class MPGame extends JPanel{
     private final String host;
     private final int port;
     private final int rgb;
     private final Vector<Wall> walls;
+    private final MPPlayer player;
 
 
     public MPGame(String host, int port, int rgb){
@@ -20,6 +23,7 @@ public class MPGame {
         this.port = port;
         this.rgb = rgb;
         this.walls = new Vector<>();
+        this.player = new MPPlayer(rgb, true, this);
     }
 
     public Vector<Wall> getWalls(){
@@ -28,6 +32,10 @@ public class MPGame {
 
     public void start(){
         
+    }
+
+    public MPPlayer getPlayer(){
+        return player;
     }
 
 }
