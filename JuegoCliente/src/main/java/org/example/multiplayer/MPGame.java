@@ -30,9 +30,9 @@ public class MPGame extends JPanel{
         this.walls = new Vector<>();
         this.onlinePlayers = new Vector<>();
         this.enemys = new Vector<>();
+        this.player = new MPPlayer(rgb, true, this);
         retriveGameInfo();
 
-        this.player = new MPPlayer(rgb, true, this);
 
     }
 

@@ -53,11 +53,6 @@ public class Main {
                 info("Client connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 pool.execute(() -> {
                     onClientConnect(socket);
-                    try{
-                        poocessRequest(socket);
-                    } catch (IOException e){
-                        error("Error while processing request: " + e.getMessage());
-                    }
                 });
                 
             }
@@ -88,8 +83,8 @@ public class Main {
             Object o = null;
             try {
                  o = objIn.readObject();
-                if (o instanceof PlayerPacket){
-                    pp[0] = (PlayerPacket) o;
+                if (o instanceof PlayerPacket p){
+                    pp[0] = p;
                     gamePacket.addPlayer(pp[0]);
                     info("Player packet received: " + pp[0]);
                 }else{
