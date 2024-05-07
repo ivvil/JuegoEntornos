@@ -1,8 +1,6 @@
 package org.example.packets;
 
-import java.io.Serializable;
-
-public class WallPacket implements Serializable{
+public class WallPacket extends Packet{
     private int x;
     private int y;
     private int width;

@@ -30,8 +30,10 @@ public class Main {
     public static void main(String[] args) {
         int maxWorkers = Runtime.getRuntime().availableProcessors();
         gamePacket = new GamePacket(new WallPacket[]{
+            
             // TODO: Add walls describing the level
-        }, (int) (Math.random() * 1000));
+
+        }, (int) (Math.random() * 1000), (int) (Math.random() * 1000));
 
         int workers = Integer.parseInt(JOptionPane.showInputDialog("How many workers do you want to use?"));
         if (workers > maxWorkers) {

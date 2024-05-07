@@ -1,8 +1,6 @@
 package org.example.packets;
 
-import java.io.Serializable;
-
-public class CoinPacket implements Serializable{
+public class CoinPacket extends Packet{
     private int coinSeed;
 
     public CoinPacket(int seed) {
