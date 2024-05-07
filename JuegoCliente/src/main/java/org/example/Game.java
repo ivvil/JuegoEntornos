@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.highscore.HighScoreTable;
+import org.example.highscore.Score;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -188,6 +189,10 @@ public class Game extends JPanel {
                 if (player.getHealth() <= 0) {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "\tYou died!\nCoins collected: " + coinsCount, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+                    Score s = new Score();
+                    s.setName(System.getProperty("user.name"));
+                    s.setScore(coinsCount);
+                    s.sendScore();
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
                     mf.setVisible(true);
                     return;

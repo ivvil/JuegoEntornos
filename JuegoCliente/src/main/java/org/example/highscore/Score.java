@@ -1,6 +1,10 @@
 package org.example.highscore;
 
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Logger;
 
 public class Score implements Serializable {
     private String name;
@@ -28,6 +32,26 @@ public class Score implements Serializable {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public void sendScore() {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL("http://localhost:8081/set-score");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] postData = ("name=" + name + "&score=" + score).getBytes("utf-8");
+                os.write(postData, 0, postData.length);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
     }
 
     @Override
