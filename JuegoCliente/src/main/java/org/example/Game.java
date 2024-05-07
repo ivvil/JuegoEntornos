@@ -92,13 +92,17 @@ public class Game extends JPanel {
         }
 
         // HighScore table
-        String[] columns = {"Column 1","Column 2"};
+
         DefaultTableModel model = HighScoreTable.getHighScoreTableModel();
-        JTable highScore = new JTable(model);
-        highScore.setSelectionBackground(getBackground());
-        highScore.setBackground(getBackground());
-        add(highScore);
-        highScore.setBounds(width - 175,25, 150, 250);
+        if (model != null){
+            JTable highScore = new JTable(model);
+            highScore.setSelectionBackground(getBackground());
+            highScore.setBackground(getBackground());
+            add(highScore);
+            highScore.setBounds(width - 175,25, 150, 250);
+        }else{
+            System.out.println("Coudn't connet to the database");
+        }
 
 
         JLabel dummy = new JLabel(" ");
@@ -161,14 +165,13 @@ public class Game extends JPanel {
     class EventLoop extends Thread {
         @Override
         public void run() {
-            while (true) {
-                Rectangle playerHitBox = player.getBounds();
-                if (coinSeed.nextFloat() > 0.9){
+            new Thread(() -> {
+                if (coinSeed.nextFloat() > 0.95){
                     Rectangle pos;
                     do {
                         pos = new Rectangle(
-                            coinSeed.nextInt(getWidth() - 20),
-                            coinSeed.nextInt(getHeight() - 20),
+                            coinSeed.nextInt(jf.getWidth() - 80),
+                            coinSeed.nextInt(jf.getHeight() - 80),
                             20,
                             20
                         );
@@ -177,13 +180,17 @@ public class Game extends JPanel {
                     coins.add(c);
                     add(c);
                 }
+            }).start();
+            while (true) {
                 for (int i = 0; i < coins.size(); i++) {
-                    if (coins.get(i).getHitBox().intersects(playerHitBox)) {
+                    if (coins.get(i).getBounds().intersects(player.getBounds())) {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
                     }
                 }
+
+                playerHealth.setText("Health: " + player.getHealth());
 
 
                 if (player.getHealth() <= 0) {

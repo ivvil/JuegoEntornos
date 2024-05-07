@@ -24,7 +24,11 @@ public class HighScoreTable {
 
         };
         try {
-            for (Score score : getHighScoreTable()) {
+            List<Score> highScoreTable = getHighScoreTable();
+            if (highScoreTable == null) 
+                return null;
+                
+            for (Score score : highScoreTable) {
                 model.addRow(new Object[]{score.getName(), score.getScore()});
             }
         } catch (JsonProcessingException e) {
@@ -53,13 +57,13 @@ public class HighScoreTable {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return null;
         } finally {
             try {
                 if (in != null) in.close();
                 if (connection != null) connection.disconnect();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return null;
             }
         }
         return content.toString();
@@ -68,6 +72,10 @@ public class HighScoreTable {
 
     public static List<Score> getHighScoreTable() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(getHighScoreString(), new TypeReference<List<Score>>() {});
+        String highScoreString = getHighScoreString();
+        if (highScoreString != null)
+            return objectMapper.readValue(highScoreString, new TypeReference<List<Score>>() {});
+        else
+            return null;
     }
 }

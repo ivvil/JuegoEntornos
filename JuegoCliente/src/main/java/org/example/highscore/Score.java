@@ -43,7 +43,8 @@ public class Score implements Serializable {
                 os.write(postData, 0, postData.length);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Couldn't connect to the database");
+            return;
         } finally {
             if (connection != null) connection.disconnect();
         }
