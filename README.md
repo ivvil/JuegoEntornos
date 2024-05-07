@@ -34,7 +34,7 @@
     - [ ] Workout how to start the game - ?
     - [ ] Implement admin app api - iván
 	
-- [ ] Admin app:
+  - [ ] Admin app:
     - [ ] Discover and connect to server - iván
     - [ ] Turn server off - iván
     - [ ] Start game
