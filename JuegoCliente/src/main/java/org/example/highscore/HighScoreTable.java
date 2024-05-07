@@ -44,7 +44,7 @@ public class HighScoreTable {
         HttpURLConnection connection = null;
 
         try {
-            URL url = new URL("http://localhost:8081/get-highscore-table");
+            URL url = new URL("http://vps.mariol03.es:8081/get-highscore-table");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();

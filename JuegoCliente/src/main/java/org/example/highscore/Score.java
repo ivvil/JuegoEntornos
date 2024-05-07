@@ -32,7 +32,7 @@ public class Score implements Serializable {
     public void sendScore() {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL("http://localhost:8081/set-score");
+            URL url = new URL("http://vps.mariol03.es:8081/set-score");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
@@ -42,6 +42,8 @@ public class Score implements Serializable {
                 byte[] postData = ("name=" + name + "&score=" + score).getBytes(StandardCharsets.UTF_8);
                 os.write(postData, 0, postData.length);
             }
+
+            connection.getResponseCode();
         } catch (Exception e) {
             System.out.println("Couldn't connect to the database");
             return;
