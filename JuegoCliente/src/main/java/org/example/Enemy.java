@@ -1,6 +1,7 @@
 package org.example;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JButton;
 
@@ -9,10 +10,10 @@ public class Enemy extends JButton {
     private final int sleepTime = 10;
     private final int speed = 2;
 
-    public Enemy(Game game) {
+    public Enemy(Game game, Point initialPosition) {
         this.game = game;
         setText("•_•");
-        setBounds(genRandomPosition());
+        setBounds((int) (initialPosition.getX()), (int) initialPosition.getY(), 50, 50);
         setBackground(new Color(255, 50, 50));
         setForeground(new Color(0, 0, 0));
     }

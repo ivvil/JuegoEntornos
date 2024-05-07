@@ -3,19 +3,13 @@ package org.example.packets;
 import java.io.Serializable;
 
 public class CoinPacket implements Serializable{
-    private int x;
-    private int y;
+    private int coinSeed;
 
-    public CoinPacket(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public CoinPacket(int seed) {
+        this.coinSeed = seed;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public int getSeed() {
+        return coinSeed;
     }
 }

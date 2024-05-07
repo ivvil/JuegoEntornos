@@ -5,8 +5,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
+import java.util.Random;
 import java.util.Vector;
 
 public class Game extends JPanel {
@@ -23,9 +26,11 @@ public class Game extends JPanel {
     private final JFrame jf;
     private final JFrame mf;
     private final int playerSize = 50;
+    private final Random coinSeed;
+    private final Random enemySeed;
     private int coinsCount = 0;
 
-    public Game(int width, int height, JFrame frame, JFrame menuFrame) {
+    public Game(int width, int height, JFrame frame, JFrame menuFrame, int coinSeed, int enemySeed) {
         this.jf = frame;
         this.mf = menuFrame;
         setSize(width, height);
@@ -48,10 +53,19 @@ public class Game extends JPanel {
         Wall w1 = new Wall(40, 900, 800, 10);
         add(w1);
         walls.add(w1);
+
+        // Define enemys                        vscode -> MARK: enemys
         enemys = new Vector<>();
+        this.enemySeed = new Random(enemySeed);
         for (int i = 0; i < numEnemys; i++) {
-            enemys.add(new Enemy(this));
-            add(enemys.get(i));
+            Point pos = null;
+            do{
+                pos = new Point(this.enemySeed.nextInt(width - 50), this.enemySeed.nextInt(height - 50));
+
+            }while (checkColisionWithEnemy(new Rectangle(pos,new Dimension(50, 50)), null));
+            Enemy e = new Enemy(this, pos);
+            enemys.add(e);
+            add(e);
         }
         for (Enemy i : enemys) {
             i.startMove();
@@ -59,8 +73,20 @@ public class Game extends JPanel {
         
         // Define coins                         vscode -> MARK: coins
         coins = new Vector<>();
+        this.coinSeed = new Random(coinSeed);
+
         for (int i = 0; i < numCoins; i++) {
-            coins.add(new Coin(this));
+            Rectangle pos;
+            do {
+                pos = new Rectangle(
+                    this.coinSeed.nextInt(width - 20),
+                    this.coinSeed.nextInt(height - 20),
+                    20,
+                    20
+                );
+            } while (checkColision(pos));
+            
+            coins.add(new Coin(pos));
             add(coins.get(i));
         }
 
@@ -76,9 +102,9 @@ public class Game extends JPanel {
 
     public boolean checkColisionWithEnemy(Rectangle r, Enemy self) {
         for (Enemy e : enemys) {
-            if (!e.equals(self))
+            if (self == null || !e.equals(self))
                 if (e.getBounds().intersects(r))
-                    return true;
+                    return checkColisionWithWall(r);
 
         }
         return false;
@@ -100,6 +126,15 @@ public class Game extends JPanel {
         return false;
     }
 
+    public boolean checkColisionWithWall(Rectangle r) {
+        for (Wall w : walls) {
+            if (w.isColiding(r)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected JFrame getFrame() {
         return jf;
     }
@@ -111,33 +146,38 @@ public class Game extends JPanel {
     private void hideWindow() {
         jf.setVisible(false);
     }
-
+    // Event loop                           vscode -> MARK: EventLoop
     class EventLoop extends Thread {
         @Override
         public void run() {
             while (true) {
                 Rectangle playerHitBox = player.getBounds();
+                if (coinSeed.nextFloat() > 0.9){
+                    Rectangle pos;
+                    do {
+                        pos = new Rectangle(
+                            coinSeed.nextInt(getWidth() - 20),
+                            coinSeed.nextInt(getHeight() - 20),
+                            20,
+                            20
+                        );
+                    } while (checkColisionWithWall(pos));
+                    Coin c = new Coin(pos);
+                    coins.add(c);
+                    add(c);
+                }
                 for (int i = 0; i < coins.size(); i++) {
                     if (coins.get(i).getHitBox().intersects(playerHitBox)) {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
-                        gp.repaint();
                     }
                 }
-                if (coinsCount >= 10) {
-                    gp.hideWindow();
-                    JOptionPane.showMessageDialog(null, "You Win!");
-                    gp.getFrame().dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
-                    mf.setVisible(true);
-                    return;
-                }
 
-                playerHealth.setText("Health: " + player.getHealth());
 
                 if (player.getHealth() <= 0) {
                     gp.hideWindow();
-                    JOptionPane.showMessageDialog(null, "You Lose!");
+                    JOptionPane.showMessageDialog(null, "\tYou died!\nCoins collected: " + coinsCount, "Game Over", JOptionPane.INFORMATION_MESSAGE);
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
                     mf.setVisible(true);
                     return;
