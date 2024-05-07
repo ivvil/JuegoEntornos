@@ -1,4 +1,4 @@
-package dev.shft.network;
+package dev.shft.network.client;
 
 import java.io.IOException;
 import java.net.Socket;

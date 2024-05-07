@@ -1,4 +1,7 @@
-package dev.shft.network;
+package dev.shft.network.client;
+
+import dev.shft.network.ConnectionStatus;
+import dev.shft.network.ConnectionType;
 
 public abstract class AbstractConnection implements Connection {
 	protected final ConnectionType type;
