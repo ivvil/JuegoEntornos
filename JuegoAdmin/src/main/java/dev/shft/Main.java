@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import dev.shft.utils.ProgressDialog;
 import dev.shft.utils.TextInput;
 
 public class Main {
@@ -50,6 +51,11 @@ public class Main {
 		connect.setBounds(50, 250, 400, 50);
 
 		panel.add(new JLabel(" "));
+
+		connect.addActionListener(evt -> {
+				ProgressDialog pd = new ProgressDialog(window, "Connecting");
+				pd.setVisible(true);
+			});
 		 
 		window.setVisible(true);
     }
