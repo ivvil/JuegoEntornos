@@ -4,18 +4,13 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.logging.Logger;
+import java.nio.charset.StandardCharsets;
 
 public class Score implements Serializable {
     private String name;
     private int score;
 
     public Score() {
-    }
-
-    public Score(String name, int score) {
-        this.name = name;
-        this.score = score;
     }
 
     public String getName() {
@@ -44,7 +39,7 @@ public class Score implements Serializable {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             try (OutputStream os = connection.getOutputStream()) {
-                byte[] postData = ("name=" + name + "&score=" + score).getBytes("utf-8");
+                byte[] postData = ("name=" + name + "&score=" + score).getBytes(StandardCharsets.UTF_8);
                 os.write(postData, 0, postData.length);
             }
         } catch (Exception e) {
