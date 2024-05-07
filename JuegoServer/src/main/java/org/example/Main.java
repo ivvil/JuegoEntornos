@@ -70,6 +70,7 @@ public class Main {
             try{
                 ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
                 objOut.writeObject(gamePacket);
+                // TODO: Start listening for player packets
             } catch (IOException e){
                 error("Error while sending game packet to client: " + e.getMessage());
             }
@@ -96,6 +97,7 @@ public class Main {
                 error("Coudn't read object: " + e.getMessage());
             }
 
+            // Do this only on game start
             objOut.writeObject(gamePacket);
             for (Socket s : clients){
                 if (s != socket){
@@ -115,6 +117,8 @@ public class Main {
 
     }
 
+
+    // Use this when the game is started to process the cleint sended packets
     private static void poocessRequest(Socket socket) throws IOException {
         clients.add(socket);
         ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());

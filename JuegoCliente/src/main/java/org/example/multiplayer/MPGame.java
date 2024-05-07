@@ -1,9 +1,6 @@
 package org.example.multiplayer;
 
 import java.awt.Rectangle;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Vector;
 
