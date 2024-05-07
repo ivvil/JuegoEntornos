@@ -1,9 +1,9 @@
 package org.example;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import org.example.highscore.HighScoreTable;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -89,6 +89,16 @@ public class Game extends JPanel {
             coins.add(new Coin(pos));
             add(coins.get(i));
         }
+
+        // HighScore table
+        String[] columns = {"Column 1","Column 2"};
+        DefaultTableModel model = HighScoreTable.getHighScoreTableModel();
+        JTable highScore = new JTable(model);
+        highScore.setSelectionBackground(getBackground());
+        highScore.setBackground(getBackground());
+        add(highScore);
+        highScore.setBounds(width - 175,25, 150, 250);
+
 
         JLabel dummy = new JLabel(" ");
         add(dummy, BorderLayout.CENTER);
