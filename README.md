@@ -4,8 +4,8 @@
 ---
 
 ## Roadmap 
-- [ ] Create a database with scores - mario
-- [ ] Display the top scores in the game - mario
+- [X] Create a database with scores - mario
+- [X] Display the top scores in the game - mario
 
 - [ ] Single player mode:
   - [x] Base game logic - victor
