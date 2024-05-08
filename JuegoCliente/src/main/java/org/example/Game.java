@@ -30,6 +30,7 @@ public class Game extends JPanel {
     private final Random coinSeed;
     private final Random enemySeed;
     private int coinsCount = 0;
+    private final JLabel dummy;
 
     public Game(int width, int height, JFrame frame, JFrame menuFrame, int coinSeed, int enemySeed) {
         this.jf = frame;
@@ -105,7 +106,7 @@ public class Game extends JPanel {
         }
 
 
-        JLabel dummy = new JLabel(" ");
+        dummy = new JLabel(" ");
         add(dummy, BorderLayout.CENTER);
         EventLoop it = new EventLoop();
         it.start();
@@ -119,15 +120,15 @@ public class Game extends JPanel {
         for (Enemy e : enemys) {
             if (self == null || !e.equals(self))
                 if (e.getBounds().intersects(r))
-                    return checkColisionWithWall(r);
+                    return true;
 
         }
-        return false;
+        return checkColision(r);
     }
 
     public boolean checkColision(Rectangle r) {
         for (Wall w : walls) {
-            if (w.isColiding(r)) {
+            if (w.getBounds().intersects(r)) {
                 return true;
             }
         }
@@ -138,15 +139,6 @@ public class Game extends JPanel {
         if (y < 0 || y > getHeight() - r.getHeight())
             return true;
 
-        return false;
-    }
-
-    public boolean checkColisionWithWall(Rectangle r) {
-        for (Wall w : walls) {
-            if (w.isColiding(r)) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -166,19 +158,29 @@ public class Game extends JPanel {
         @Override
         public void run() {
             new Thread(() -> {
-                if (coinSeed.nextFloat() > 0.95){
-                    Rectangle pos;
-                    do {
-                        pos = new Rectangle(
-                            coinSeed.nextInt(jf.getWidth() - 80),
-                            coinSeed.nextInt(jf.getHeight() - 80),
-                            20,
-                            20
-                        );
-                    } while (checkColisionWithWall(pos));
-                    Coin c = new Coin(pos);
-                    coins.add(c);
-                    add(c);
+                while (true){
+                    if (coinSeed.nextFloat() > 0.8){
+                        Rectangle pos;
+                        do {
+                            pos = new Rectangle(
+                                coinSeed.nextInt(jf.getWidth() - 80),
+                                coinSeed.nextInt(jf.getHeight() - 80),
+                                20,
+                                20
+                            );
+                        } while (checkColision(pos));
+                        Coin c = new Coin(pos);
+                        coins.add(c);
+                        remove(dummy);
+                        add(c);
+                        c.setBounds(pos);
+                        add(dummy, BorderLayout.CENTER);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }).start();
             while (true) {
