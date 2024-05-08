@@ -11,10 +11,10 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.example.packets.EnemyPacket;
-import org.example.packets.GamePacket;
-import org.example.packets.PlayerPacket;
-import org.example.packets.WallPacket;
+import org.example.packets.client.EnemyPacket;
+import org.example.packets.client.GamePacket;
+import org.example.packets.client.PlayerPacket;
+import org.example.packets.client.WallPacket;
 
 import static org.example.Logger.*;
 
@@ -97,9 +97,8 @@ public class Main {
                 }
             } catch (ClassNotFoundException e){
                 error("Coudn't read object: " + e.getMessage());
+                return;
             }
-            
-            // TODO: Wait for an admin start package
 
             // Do this only on game start
             objOut.writeObject(gamePacket);

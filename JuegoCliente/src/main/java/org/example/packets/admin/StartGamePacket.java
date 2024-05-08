@@ -1,4 +1,6 @@
-package org.example.packets;
+package org.example.packets.admin;
+
+import org.example.packets.Packet;
 
 public class StartGamePacket extends Packet{
     private final int x;

@@ -1,4 +1,6 @@
-package org.example.packets;
+package org.example.packets.client;
+
+import org.example.packets.Packet;
 
 public class PlayerPacket extends Packet{
     private int x;

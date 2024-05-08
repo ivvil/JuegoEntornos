@@ -2,17 +2,15 @@ package org.example.multiplayer;
 
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
-import java.net.Socket;
 import java.util.Vector;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.example.Wall;
 
 public class MPGame extends JPanel{
-    private final String host;
-    private final int port;
     private final int rgb;
     private final Vector<Wall> walls;
     private final Vector<MPEnemy> enemys;
@@ -24,17 +22,20 @@ public class MPGame extends JPanel{
 
     public MPGame(String host, int port, int rgb, JFrame frame){
         this.frame = frame;
-        this.host = host;
-        this.port = port;
         this.rgb = rgb;
-        this.connection = new MPConnection(host, port, rgb);
+        this.connection = MPConnection.newConnection(host, port, rgb);
         this.walls = new Vector<>();
         this.onlinePlayers = new Vector<>();
         this.enemys = new Vector<>();
         this.player = new MPPlayer(rgb, true, this);
+
+        if (connection == null){
+            JOptionPane.showMessageDialog(null, "Error connecting to server\nCheck the console for details", "Error", JOptionPane.ERROR_MESSAGE);
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            return;
+        }
+
         retriveGameInfo();
-
-
     }
 
     public MPConnection getConnection(){
