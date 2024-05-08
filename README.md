@@ -64,3 +64,6 @@
 - [ ] The server will start listening for player packets packets for every client
   - [ ] Server implementation
   - [ ] Client implementation
+- [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
+  - [ ] Server implementation
+  - [ ] Client implementation
