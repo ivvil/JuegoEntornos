@@ -1,11 +1,11 @@
 package org.example.packets;
 
-public class PlayerPacket extends Packet{
-    private int x;
-    private int y;
-    private int rgb;
+public class StartGamePacket extends Packet{
+    private final int x;
+    private final int y;
+    private final int rgb;
 
-    public PlayerPacket(int x, int y, int rgb) {
+    public StartGamePacket(int x, int y, int rgb){
         this.x = x;
         this.y = y;
         this.rgb = rgb;
@@ -19,7 +19,7 @@ public class PlayerPacket extends Packet{
         return y;
     }
 
-    public int getColor() {
+    public int getRgb() {
         return rgb;
     }
 }

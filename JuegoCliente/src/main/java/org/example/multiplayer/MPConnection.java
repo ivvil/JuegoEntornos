@@ -8,7 +8,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import org.example.packets.EnemyPacket;
-import org.example.packets.PlayerPacket; 
+import org.example.packets.PlayerPacket;
+import org.example.packets.StartGamePacket; 
 
 public class MPConnection {
     private final String host;
@@ -48,6 +49,25 @@ public class MPConnection {
         EnemyPacket packet = new EnemyPacket(p.x, p.y, axis, direction);
         try{
             objOut.writeObject(packet);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void waitForGameToStart(int rgb){
+        Object o = null;
+        try{
+            while(true){
+                o = objIn.readObject();
+                if (o instanceof StartGamePacket sgp){
+                    if (sgp.getRgb() == rgb){
+                        System.out.println("Game starting");
+                        break;
+                    }
+                }else{
+                    Thread.sleep(1000);
+                }
+            }
         } catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }

@@ -51,11 +51,11 @@
   - [ ] Server implementation
   - [ ] Admin implementation
 - [ ] The server will send a start game packet to all clients or the game packet to all clients
-  - [ ] Server implementation
+  - [x] Server implementation - victor
   - [ ] Client implementation
 - [ ] The server will start listening for player packets packets for every client
-  - [ ] Server implementation
+  - [x] Server implementation - victor
   - [ ] Client implementation
 - [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
-  - [ ] Server implementation
+  - [x] Server implementation - victor
   - [ ] Client implementation

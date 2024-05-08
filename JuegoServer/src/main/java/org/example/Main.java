@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -21,8 +22,8 @@ public class Main {
     private static final int port = 6942;
     private static ServerSocket serverSocket = null;
     private static ThreadPool pool = null;
-    private static Vector<Socket> clients = new Vector<>();
-    private static Vector<PlayerPacket> players = new Vector<>();
+    private static HashMap<Socket, Integer> clients = new HashMap<>();
+    private static HashMap<Integer, PlayerPacket> players = new HashMap<>();
     private static GamePacket gamePacket = null;
     private static int numEnemis = 10;
 
@@ -66,7 +67,7 @@ public class Main {
     }
 
     public static void startGame(){
-        for(Socket s : clients){
+        for(Socket s : clients.keySet()){
             try{
                 ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
                 objOut.writeObject(gamePacket);
@@ -78,7 +79,6 @@ public class Main {
     }
 
     public static void onClientConnect(Socket socket){
-        clients.add(socket);
         try{
             ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
@@ -89,6 +89,8 @@ public class Main {
                 if (o instanceof PlayerPacket p){
                     pp[0] = p;
                     gamePacket.addPlayer(pp[0]);
+                    clients.put(socket, pp[0].getColor());
+                    players.put(pp[0].getColor(), pp[0]);
                     info("Player packet received: " + pp[0]);
                 }else{
                     error("Invalid packet received: " + o + " " + o.getClass());
@@ -96,10 +98,12 @@ public class Main {
             } catch (ClassNotFoundException e){
                 error("Coudn't read object: " + e.getMessage());
             }
+            
+            // TODO: Wait for an admin start package
 
             // Do this only on game start
             objOut.writeObject(gamePacket);
-            for (Socket s : clients){
+            for (Socket s : clients.keySet()){
                 if (s != socket){
                     pool.execute(() -> {
                         try{
@@ -120,7 +124,6 @@ public class Main {
 
     // Use this when the game is started to process the cleint sended packets
     private static void poocessRequest(Socket socket) throws IOException {
-        clients.add(socket);
         ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
         
@@ -128,7 +131,7 @@ public class Main {
             Object o = objIn.readObject();
             if (o instanceof PlayerPacket pp){
                 info("Player packet received: " + pp);
-                for (Socket s : clients){
+                for (Socket s : clients.keySet()){
                     if (s != socket){
                         pool.execute(() -> {
                             try{
@@ -143,7 +146,7 @@ public class Main {
 
             }else if(o instanceof EnemyPacket ep){
                 info("Enemy packet received: " + ep);
-                for (Socket s : clients){
+                for (Socket s : clients.keySet()){
                     if (s != socket){
                         pool.execute(() -> {
                             try{
