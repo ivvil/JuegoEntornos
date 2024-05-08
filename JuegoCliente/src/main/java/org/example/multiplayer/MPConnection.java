@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import org.example.packets.admin.StartGamePacket;
 import org.example.packets.client.EnemyPacket;
@@ -14,8 +15,10 @@ import org.example.packets.client.PlayerPacket;
 public class MPConnection {
     private final int rgb;
     private final Socket socket;
+    private final HashMap<Integer, PlayerPacket> players = new HashMap<>();
     private final ObjectInputStream objIn;
     private final ObjectOutputStream objOut;
+    private final PlayerPacket selfPlayer;
 
     public static MPConnection newConnection(String host, int port, int rgb){
         try{
@@ -39,6 +42,7 @@ public class MPConnection {
         } catch (IOException e){
             throw e;
         }
+        selfPlayer = new PlayerPacket(0, 0, rgb);
         initListener();
     }
 
@@ -84,10 +88,11 @@ public class MPConnection {
                 try{
                     Object o = objIn.readObject();
                     if (o instanceof PlayerPacket pp){
-                        System.out.println("Player packet received: " + pp);
-                        // TODO: Create the instances for the players
+                        if (!pp.equals(selfPlayer))
+                            players.put(pp.getColor(), pp);
+                        // TODO: Update game state with player packets
                     }
-                    // TODO: Recive enemy packets and interprete the,
+                    // TODO: Recive enemy packets and interprete them
                 }catch (Exception e){
                     System.out.println("Error: " + e.getMessage());
                 }
