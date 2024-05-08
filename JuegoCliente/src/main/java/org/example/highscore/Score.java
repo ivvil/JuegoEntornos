@@ -3,6 +3,7 @@ package org.example.highscore;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -32,7 +33,7 @@ public class Score implements Serializable {
     public void sendScore() {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL("http://vps.mariol03.es:8081/set-score");
+            URL url = new URI("http://vps.mariol03.es:8081/set-score").toURL();
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
