@@ -42,14 +42,6 @@
     - [ ] Start game
     - [ ] Restart game
 
-## Movement ideas 
-
-  * Maybe movement should be a little slippery (for added difficulty)
-  * Movement should be based on acceleration and deceleration, instead of just applying a constant velocity
-  * Snappier feeling
-  * Friction 
-  * Dash movement?
-
 ## Comunicacion client-server (Multiplayer)
 
 - [ ] The client will send a playerpacket on join or an admin packet is is gameAdmin
@@ -62,5 +54,8 @@
   - [ ] Server implementation
   - [ ] Client implementation
 - [ ] The server will start listening for player packets packets for every client
+  - [ ] Server implementation
+  - [ ] Client implementation
+- [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
   - [ ] Server implementation
   - [ ] Client implementation
