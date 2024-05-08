@@ -7,11 +7,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.example.packets.client.EnemyPacket;
 import org.example.packets.client.GamePacket;
 import org.example.packets.client.PlayerPacket;
 import org.example.packets.client.WallPacket;
@@ -26,6 +24,7 @@ public class Main {
     private static HashMap<Integer, PlayerPacket> players = new HashMap<>();
     private static GamePacket gamePacket = null;
     private static int numEnemis = 10;
+    private static int initialNumCoins = 10;
 
 
     public static void main(String[] args) {
@@ -34,7 +33,7 @@ public class Main {
             
             // TODO: Add walls describing the level
 
-        }, (int) (Math.random() * 1000), (int) (Math.random() * 1000));
+        }, (int) (Math.random() * 1000), (int) (Math.random() * 1000), numEnemis, initialNumCoins);
 
         int workers = Integer.parseInt(JOptionPane.showInputDialog("How many workers do you want to use?"));
         if (workers > maxWorkers) {
@@ -121,47 +120,47 @@ public class Main {
     }
 
 
-    // Use this when the game is started to process the cleint sended packets
-    private static void poocessRequest(Socket socket) throws IOException {
-        ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
-        ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
+    // // Use this when the game is started to process the cleint sended packets
+    // private static void poocessRequest(Socket socket) throws IOException {
+    //     ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
+    //     ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
         
-        try {
-            Object o = objIn.readObject();
-            if (o instanceof PlayerPacket pp){
-                info("Player packet received: " + pp);
-                for (Socket s : clients.keySet()){
-                    if (s != socket){
-                        pool.execute(() -> {
-                            try{
-                                ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                                out.writeObject(pp);
-                            } catch (IOException e){
-                                error("Error while sending packet to client: " + e.getMessage());
-                            }
-                        });
-                    }
-                }
+    //     try {
+    //         Object o = objIn.readObject();
+    //         if (o instanceof PlayerPacket pp){
+    //             info("Player packet received: " + pp);
+    //             for (Socket s : clients.keySet()){
+    //                 if (s != socket){
+    //                     pool.execute(() -> {
+    //                         try{
+    //                             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+    //                             out.writeObject(pp);
+    //                         } catch (IOException e){
+    //                             error("Error while sending packet to client: " + e.getMessage());
+    //                         }
+    //                     });
+    //                 }
+    //             }
 
-            }else if(o instanceof EnemyPacket ep){
-                info("Enemy packet received: " + ep);
-                for (Socket s : clients.keySet()){
-                    if (s != socket){
-                        pool.execute(() -> {
-                            try{
-                                ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                                out.writeObject(ep);
-                            } catch (IOException e){
-                                error("Error while sending packet to client: " + e.getMessage());
-                            }
-                        });
-                    }
-                }
-            }
-        }catch (Exception e){
-            error("Coudnt process request from:  " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + " -> " + e.getMessage());
-        }
+    //         }else if(o instanceof EnemyPacket ep){
+    //             info("Enemy packet received: " + ep);
+    //             for (Socket s : clients.keySet()){
+    //                 if (s != socket){
+    //                     pool.execute(() -> {
+    //                         try{
+    //                             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+    //                             out.writeObject(ep);
+    //                         } catch (IOException e){
+    //                             error("Error while sending packet to client: " + e.getMessage());
+    //                         }
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //     }catch (Exception e){
+    //         error("Coudnt process request from:  " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + " -> " + e.getMessage());
+    //     }
         
-        socket.close();
-    }
+    //     socket.close();
+    // }
 }

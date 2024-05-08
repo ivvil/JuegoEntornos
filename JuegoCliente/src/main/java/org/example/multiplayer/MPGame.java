@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import org.example.Wall;
 
 public class MPGame extends JPanel{
-    private final int rgb;
+    private final int currentPlayerRGB;
     private final Vector<Wall> walls;
     private final Vector<MPEnemy> enemys;
     private final MPPlayer player;
@@ -22,7 +22,7 @@ public class MPGame extends JPanel{
 
     public MPGame(String host, int port, int rgb, JFrame frame){
         this.frame = frame;
-        this.rgb = rgb;
+        this.currentPlayerRGB = rgb;
         this.connection = MPConnection.newConnection(host, port, rgb);
         this.walls = new Vector<>();
         this.onlinePlayers = new Vector<>();
@@ -36,6 +36,18 @@ public class MPGame extends JPanel{
         }
 
         retriveGameInfo();
+    }
+
+    public int getPlayerRGB(){
+        return currentPlayerRGB;
+    }
+
+    public JFrame getFrame(){
+        return frame;
+    }
+    
+    public Vector<MPPlayer> getOnlinePlayers(){
+        return onlinePlayers;
     }
 
     public MPConnection getConnection(){
