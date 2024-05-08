@@ -13,7 +13,7 @@
   - [x] Base game logic - victor
   - [ ] Improve gameplay - ivan
       - [x] Improve movement - victor
-  - [ ] Add levels (arenas) - ?
+  - [ ] Add levels (arenas) - TODO: pablo
   - [ ] Refactor the way enemies work - ?
 
 - [ ] Multiplayer mode:
