@@ -1,9 +1,11 @@
 package org.example.multiplayer;
 
 import java.awt.Rectangle;
+import java.awt.event.WindowEvent;
 import java.net.Socket;
 import java.util.Vector;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.example.Wall;
@@ -17,9 +19,11 @@ public class MPGame extends JPanel{
     private final MPPlayer player;
     private final Vector<MPPlayer> onlinePlayers;
     private final MPConnection connection;
+    private final JFrame frame;
 
 
-    public MPGame(String host, int port, int rgb){
+    public MPGame(String host, int port, int rgb, JFrame frame){
+        this.frame = frame;
         this.host = host;
         this.port = port;
         this.rgb = rgb;
