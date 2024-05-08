@@ -1,12 +1,6 @@
 package dev.shft.network.client;
 
-import dev.shft.network.ConnectionType;
-
-public class ClientConnection extends AbstractConnection {
-
-	public ClientConnection() {
-		super(ConnectionType.CLIENT);
-	}
+public class AdminConnection extends AbstractConnection {
 
 	@Override
 	public void initConnection() {
