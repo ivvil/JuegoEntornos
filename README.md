@@ -42,14 +42,6 @@
     - [ ] Start game
     - [ ] Restart game
 
-## Movement ideas 
-
-  * Maybe movement should be a little slippery (for added difficulty)
-  * Movement should be based on acceleration and deceleration, instead of just applying a constant velocity
-  * Snappier feeling
-  * Friction 
-  * Dash movement?
-
 ## Comunicacion client-server (Multiplayer)
 
 - [ ] The client will send a playerpacket on join or an admin packet is is gameAdmin
