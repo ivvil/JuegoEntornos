@@ -90,6 +90,7 @@ public class Main {
                  o = objIn.readObject();
                 if (o instanceof PlayerPacket){
                     pp[0] = (PlayerPacket) o;
+                    gamePacket.addPlayer(pp[0]);
                     info("Player packet received: " + pp[0]);
                 }else{
                     error("Invalid packet received: " + o + " " + o.getClass());

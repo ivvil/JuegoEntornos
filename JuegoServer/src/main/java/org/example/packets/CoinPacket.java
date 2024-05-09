@@ -1,19 +1,15 @@
 package org.example.packets;
 
-public class CoinPacket {
-    private int x;
-    private int y;
+import java.io.Serializable;
 
-    public CoinPacket(int x, int y) {
-        this.x = x;
-        this.y = y;
+public class CoinPacket implements Serializable{
+    private int coinSeed;
+
+    public CoinPacket(int seed) {
+        this.coinSeed = seed;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public int getSeed() {
+        return coinSeed;
     }
 }

@@ -92,7 +92,7 @@ public class Main {
         gameFrame[0] = new JFrame("Game");
         int frameWidth = 1900;
         int frameHeight = 1060;
-        Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame);
+        Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame,  (int) (Math.random() * 1000) + 1, (int) (Math.random() * 1000) + 1);
         game.getPlayer().setBackground(playerColor);
         float[] hsb = Color.RGBtoHSB(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), null);
 
