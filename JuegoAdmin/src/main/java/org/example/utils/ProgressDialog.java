@@ -1,7 +1,18 @@
-package dev.shft.utils;
+package org.example.utils;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
+import javax.swing.Icon;
+import java.awt.Frame;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ProgressDialog extends JDialog {
 
@@ -13,9 +24,10 @@ public class ProgressDialog extends JDialog {
         super(owner);
         setTitle("Progress");
         setModal(true);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setSize(300, 100);
         setLocationRelativeTo(owner);
+
 
 		label = new JLabel(text);
         progressBar = new JProgressBar();
@@ -29,6 +41,14 @@ public class ProgressDialog extends JDialog {
         panel.add(spinnerLabel);
 
         add(panel);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setVisible(false);
+                dispose();
+                owner.requestFocus();
+            }
+        });
     }
 
     private class SpinnerIcon implements Icon {

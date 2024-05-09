@@ -1,7 +1,6 @@
-package dev.shft.network.client;
+package org.example.network.client;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 public interface Connection {

@@ -1,9 +1,9 @@
-package dev.shft.network.client;
+package org.example.network.client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import dev.shft.network.ConnectionType;
+import org.example.network.ConnectionType;
 
 public class AdminConnection extends AbstractConnection {
 

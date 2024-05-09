@@ -1,4 +1,4 @@
-package dev.shft.network.packets;
+package org.example.network.packets;
 
 public class Admin {
 	public static enum Action {

@@ -1,6 +1,6 @@
-package dev.shft.network.client;
+package org.example.network.client;
 
-import dev.shft.network.ConnectionType;
+import org.example.network.ConnectionType;
 
 public class ClientConnection extends AbstractConnection {
 

@@ -1,7 +1,7 @@
-package dev.shft.network.packets;
+package org.example.network.packets;
 
-import dev.shft.network.ConnectionStatus;
-import dev.shft.network.ConnectionType;
+import org.example.network.ConnectionStatus;
+import org.example.network.ConnectionType;
 
 public class Connection {
 	public final ConnectionType type;

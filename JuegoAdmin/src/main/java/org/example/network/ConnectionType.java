@@ -1,4 +1,4 @@
-package dev.shft.network;
+package org.example.network;
 
 public enum ConnectionType {
 	CLIENT,

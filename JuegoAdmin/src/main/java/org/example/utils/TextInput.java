@@ -1,4 +1,4 @@
-package dev.shft.utils;
+package org.example.utils;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package dev.shft.network.client;
+package org.example.network.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,8 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import dev.shft.network.ConnectionStatus;
-import dev.shft.network.ConnectionType;
+import org.example.network.ConnectionStatus;
+import org.example.network.ConnectionType;
 
 public abstract class AbstractConnection implements Connection {
 	protected final ConnectionType type;
@@ -47,7 +47,7 @@ public abstract class AbstractConnection implements Connection {
 		outputStream = new ObjectOutputStream(socket.getOutputStream());
 		inputStream = new ObjectInputStream(socket.getInputStream());
 
-		sendObj(new dev.shft.network.packets.Connection(type));
+		sendObj(new org.example.network.packets.Connection(type, checkConnection()));
 	}
 
 	protected void stopConnection() throws IOException {
