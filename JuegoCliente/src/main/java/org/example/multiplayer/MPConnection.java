@@ -13,6 +13,12 @@ import org.example.packets.client.EnemyPacket;
 import org.example.packets.client.PlayerPacket;
 
 public class MPConnection {
+	
+	// NOTE These are not used anywhere
+    private final String host;
+    private final int port;
+	// ---
+	
     private final int rgb;
     private final Socket socket;
     private final HashMap<Integer, PlayerPacket> players = new HashMap<>();
