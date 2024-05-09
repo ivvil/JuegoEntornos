@@ -1,14 +1,15 @@
 package org.example.multiplayer;
 
 import java.awt.Point;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
-import org.example.packets.EnemyPacket;
-import org.example.packets.PlayerPacket; 
+import org.example.packets.admin.StartGamePacket;
+import org.example.packets.client.EnemyPacket;
+import org.example.packets.client.PlayerPacket;
 
 public class MPConnection {
 	
@@ -18,25 +19,31 @@ public class MPConnection {
 	// ---
 	
     private final int rgb;
-    private Socket socket = null;
-    private InputStream in = null;
-    private OutputStream out = null;
-    private ObjectInputStream objIn = null;
-    private ObjectOutputStream objOut = null;
+    private final Socket socket;
+    private final ObjectInputStream objIn;
+    private final ObjectOutputStream objOut;
 
-    public MPConnection(String host, int port, int rgb){
-        this.host = host;
-    
-        this.port = port;
+    public static MPConnection newConnection(String host, int port, int rgb){
+        try{
+            return new MPConnection(host, port, rgb);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+            System.out.println();
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public MPConnection(String host, int port, int rgb) throws UnknownHostException, IOException{
         this.rgb = rgb;
         try{
             this.socket = new Socket(host, port);
-            this.in = socket.getInputStream();
-            this.out = socket.getOutputStream();
-            this.objIn = new ObjectInputStream(in);
-            this.objOut = new ObjectOutputStream(out);
-        } catch (Exception e){
-            System.out.println("Error: " + e.getMessage());
+            this.objIn = new ObjectInputStream(socket.getInputStream());
+            this.objOut = new ObjectOutputStream(socket.getOutputStream());
+        }catch(UnknownHostException e){
+            throw e;
+        } catch (IOException e){
+            throw e;
         }
         initListener();
     }
@@ -53,6 +60,25 @@ public class MPConnection {
         EnemyPacket packet = new EnemyPacket(p.x, p.y, axis, direction);
         try{
             objOut.writeObject(packet);
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void waitForGameToStart(int rgb){
+        Object o = null;
+        try{
+            while(true){
+                o = objIn.readObject();
+                if (o instanceof StartGamePacket sgp){
+                    if (sgp.getRgb() == rgb){
+                        System.out.println("Game starting");
+                        break;
+                    }
+                }else{
+                    Thread.sleep(1000);
+                }
+            }
         } catch (Exception e){
             System.out.println("Error: " + e.getMessage());
         }

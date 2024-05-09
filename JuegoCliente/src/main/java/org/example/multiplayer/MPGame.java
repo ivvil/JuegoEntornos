@@ -1,39 +1,53 @@
 package org.example.multiplayer;
 
 import java.awt.Rectangle;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.example.Wall;
 
 public class MPGame extends JPanel{
-    private final String host;
-    private final int port;
-    private final int rgb;
+    private final int currentPlayerRGB;
     private final Vector<Wall> walls;
     private final Vector<MPEnemy> enemys;
     private final MPPlayer player;
     private final Vector<MPPlayer> onlinePlayers;
     private final MPConnection connection;
+    private final JFrame frame;
 
 
-    public MPGame(String host, int port, int rgb){
-        this.host = host;
-        this.port = port;
-        this.rgb = rgb;
-        this.connection = new MPConnection(host, port, rgb);
+    public MPGame(String host, int port, int rgb, JFrame frame){
+        this.frame = frame;
+        this.currentPlayerRGB = rgb;
+        this.connection = MPConnection.newConnection(host, port, rgb);
         this.walls = new Vector<>();
         this.onlinePlayers = new Vector<>();
         this.enemys = new Vector<>();
-        retriveGameInfo();
-
         this.player = new MPPlayer(rgb, true, this);
 
+        if (connection == null){
+            JOptionPane.showMessageDialog(null, "Error connecting to server\nCheck the console for details", "Error", JOptionPane.ERROR_MESSAGE);
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            return;
+        }
+
+        retriveGameInfo();
+    }
+
+    public int getPlayerRGB(){
+        return currentPlayerRGB;
+    }
+
+    public JFrame getFrame(){
+        return frame;
+    }
+    
+    public Vector<MPPlayer> getOnlinePlayers(){
+        return onlinePlayers;
     }
 
     public MPConnection getConnection(){

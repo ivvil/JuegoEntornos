@@ -1,9 +1,8 @@
-package org.example.packets;
+package org.example.packets.client;
 
-import java.awt.*;
-import java.io.Serializable;
+import org.example.packets.Packet;
 
-public class PlayerPacket implements Serializable{
+public class PlayerPacket extends Packet{
     private int x;
     private int y;
     private int rgb;
@@ -22,7 +21,7 @@ public class PlayerPacket implements Serializable{
         return y;
     }
 
-    public Color getColor() {
-        return new Color(rgb);
+    public int getColor() {
+        return rgb;
     }
 }

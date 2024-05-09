@@ -28,6 +28,11 @@ public class ScoreController {
         scoreRepository.save(newScore);
     }
 
+    @DeleteMapping("/delete-score")
+    public void deleteScore() {
+        scoreRepository.deleteAll();
+    }
+
     @GetMapping("/get-highscore-table")
     public List<Score> getHighscoreTable() {
         return scoreRepository.findTop10rderByScoreDesc();

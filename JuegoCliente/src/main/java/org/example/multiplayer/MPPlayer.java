@@ -9,10 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class MPPlayer extends JButton {
     private final int rgb;
-    private final boolean isSelf;
-
     private double maxSpeed = 3;
-    private final int sleepTime = 6;
     private final int maxHealth = 10;
 
     
@@ -26,11 +23,14 @@ public class MPPlayer extends JButton {
     
     public MPPlayer(int rgb, boolean isSelf, MPGame game){
         this.rgb = rgb;
-        this.isSelf = isSelf;
         this.game = game;
         if (isSelf){
             setupInputListener();
         }
+    }
+
+    public int getRgb() {
+        return rgb;
     }
 
     public int getHealth() {

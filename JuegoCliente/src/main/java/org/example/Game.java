@@ -1,9 +1,10 @@
 package org.example;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import org.example.highscore.HighScoreTable;
+import org.example.highscore.Score;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -29,6 +30,7 @@ public class Game extends JPanel {
     private final Random coinSeed;
     private final Random enemySeed;
     private int coinsCount = 0;
+    private final JLabel dummy;
 
     public Game(int width, int height, JFrame frame, JFrame menuFrame, int coinSeed, int enemySeed) {
         this.jf = frame;
@@ -90,7 +92,21 @@ public class Game extends JPanel {
             add(coins.get(i));
         }
 
-        JLabel dummy = new JLabel(" ");
+        // HighScore table
+
+        DefaultTableModel model = HighScoreTable.getHighScoreTableModel();
+        if (model != null){
+            JTable highScore = new JTable(model);
+            highScore.setSelectionBackground(getBackground());
+            highScore.setBackground(getBackground());
+            add(highScore);
+            highScore.setBounds(width - 175,25, 150, 250);
+        }else{
+            System.out.println("Coudn't connet to the database");
+        }
+
+
+        dummy = new JLabel(" ");
         add(dummy, BorderLayout.CENTER);
         EventLoop it = new EventLoop();
         it.start();
@@ -104,15 +120,15 @@ public class Game extends JPanel {
         for (Enemy e : enemys) {
             if (self == null || !e.equals(self))
                 if (e.getBounds().intersects(r))
-                    return checkColisionWithWall(r);
+                    return true;
 
         }
-        return false;
+        return checkColision(r);
     }
 
     public boolean checkColision(Rectangle r) {
         for (Wall w : walls) {
-            if (w.isColiding(r)) {
+            if (w.getBounds().intersects(r)) {
                 return true;
             }
         }
@@ -123,15 +139,6 @@ public class Game extends JPanel {
         if (y < 0 || y > getHeight() - r.getHeight())
             return true;
 
-        return false;
-    }
-
-    public boolean checkColisionWithWall(Rectangle r) {
-        for (Wall w : walls) {
-            if (w.isColiding(r)) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -150,34 +157,51 @@ public class Game extends JPanel {
     class EventLoop extends Thread {
         @Override
         public void run() {
-            while (true) {
-                Rectangle playerHitBox = player.getBounds();
-                if (coinSeed.nextFloat() > 0.9){
-                    Rectangle pos;
-                    do {
-                        pos = new Rectangle(
-                            coinSeed.nextInt(getWidth() - 20),
-                            coinSeed.nextInt(getHeight() - 20),
-                            20,
-                            20
-                        );
-                    } while (checkColisionWithWall(pos));
-                    Coin c = new Coin(pos);
-                    coins.add(c);
-                    add(c);
+            new Thread(() -> {
+                while (true){
+                    if (coinSeed.nextFloat() > 0.8){
+                        Rectangle pos;
+                        do {
+                            pos = new Rectangle(
+                                coinSeed.nextInt(jf.getWidth() - 80),
+                                coinSeed.nextInt(jf.getHeight() - 80),
+                                20,
+                                20
+                            );
+                        } while (checkColision(pos));
+                        Coin c = new Coin(pos);
+                        coins.add(c);
+                        remove(dummy);
+                        add(c);
+                        c.setBounds(pos);
+                        add(dummy, BorderLayout.CENTER);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+            }).start();
+            while (true) {
                 for (int i = 0; i < coins.size(); i++) {
-                    if (coins.get(i).getHitBox().intersects(playerHitBox)) {
+                    if (coins.get(i).getBounds().intersects(player.getBounds())) {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
                     }
                 }
 
+                playerHealth.setText("Health: " + player.getHealth());
+
 
                 if (player.getHealth() <= 0) {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "\tYou died!\nCoins collected: " + coinsCount, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+                    Score s = new Score();
+                    s.setName(System.getProperty("user.name"));
+                    s.setScore(coinsCount);
+                    s.sendScore();
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));
                     mf.setVisible(true);
                     return;

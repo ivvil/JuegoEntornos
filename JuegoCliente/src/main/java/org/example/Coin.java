@@ -6,17 +6,10 @@ import java.awt.Font;
 import java.awt.Color;
 
 public class Coin extends JLabel {
-    private final Rectangle hitBox;
-
-    public Coin(Rectangle hitBox) {
+    public Coin(Rectangle bounds) {
         setText("O");
         setFont(new Font("Sans Serif", Font.BOLD, 16));
         setForeground(new Color(189, 198, 0));
-        this.hitBox = hitBox;
-        setBounds(hitBox);
-    }
-
-    public Rectangle getHitBox() {
-        return hitBox;
+        setBounds(bounds);
     }
 }
