@@ -25,7 +25,7 @@ public class MPConnection {
     private ObjectOutputStream objOut = null;
 
     public MPConnection(String host, int port, int rgb){
-        this.host = host;~/Documentos/DAW/Foramación y orientación laboral I/Apuntes.org
+        this.host = host;
     
         this.port = port;
         this.rgb = rgb;

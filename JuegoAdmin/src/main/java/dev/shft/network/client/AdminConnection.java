@@ -14,8 +14,7 @@ public class AdminConnection extends AbstractConnection {
 	@Override
 	public void initConnection() throws UnknownHostException, IOException {
 		// TODO Here we should send a packet to te server to notify it of our connection
-		
-	    startConnection();
+		startConnection();
 	}
 
 	@Override

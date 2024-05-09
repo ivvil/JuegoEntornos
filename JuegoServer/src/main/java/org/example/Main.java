@@ -42,8 +42,7 @@ public class Main {
         try {
             serverSocket = new ServerSocket(port);
         
-            InetAddress a = serverSocket.getInetAddress();
-            
+            InetAddress a = serverSocket.getInetAddress();            
 
             info("Server started at " + a.getHostAddress() + ":" + port);
 

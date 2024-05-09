@@ -46,6 +46,8 @@ public abstract class AbstractConnection implements Connection {
 
 		outputStream = new ObjectOutputStream(socket.getOutputStream());
 		inputStream = new ObjectInputStream(socket.getInputStream());
+
+		sendObj(new dev.shft.network.packets.Connection(type));
 	}
 
 	protected void stopConnection() throws IOException {
@@ -58,5 +60,9 @@ public abstract class AbstractConnection implements Connection {
 	protected ConnectionStatus checkConnection() {
 		// TODO Implement actual connection diagnostics
 		return ConnectionStatus.OK;
+	}
+	
+    protected void sendObj(Object o) throws IOException {
+		outputStream.writeObject(o);
 	}
 }
