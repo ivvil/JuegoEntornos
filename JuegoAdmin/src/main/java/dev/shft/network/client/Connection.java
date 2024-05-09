@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public interface Connection {
-	void initConnection();
-	void closeConnection();
+	void initConnection() throws UnknownHostException, IOException;
+	void closeConnection() throws IOException;
 	void startListener();
 }

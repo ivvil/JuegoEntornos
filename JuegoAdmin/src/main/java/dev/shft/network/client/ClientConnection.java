@@ -4,8 +4,8 @@ import dev.shft.network.ConnectionType;
 
 public class ClientConnection extends AbstractConnection {
 
-	public ClientConnection() {
-		super(ConnectionType.CLIENT);
+	public ClientConnection(String host, int port) {
+		super(ConnectionType.CLIENT, host, port);
 	}
 
 	@Override

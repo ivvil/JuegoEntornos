@@ -1,17 +1,28 @@
 package dev.shft.network.client;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import dev.shft.network.ConnectionType;
+
 public class AdminConnection extends AbstractConnection {
 
-	@Override
-	public void initConnection() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'initConnection'");
+	public AdminConnection(String host, int port) {
+		super(ConnectionType.ADMIN, host, port);
 	}
 
 	@Override
-	public void closeConnection() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'closeConnection'");
+	public void initConnection() throws UnknownHostException, IOException {
+		// TODO Here we should send a packet to te server to notify it of our connection
+		
+	    startConnection();
+	}
+
+	@Override
+	public void closeConnection() throws IOException {
+		// TODO Send a packet to tell the server to clear our connection
+		
+		stopConnection();
 	}
 
 	@Override

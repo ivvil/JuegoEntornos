@@ -11,8 +11,12 @@ import org.example.packets.EnemyPacket;
 import org.example.packets.PlayerPacket; 
 
 public class MPConnection {
+	
+	// NOTE These are not used anywhere
     private final String host;
     private final int port;
+	// ---
+	
     private final int rgb;
     private Socket socket = null;
     private InputStream in = null;
@@ -21,7 +25,8 @@ public class MPConnection {
     private ObjectOutputStream objOut = null;
 
     public MPConnection(String host, int port, int rgb){
-        this.host = host;
+        this.host = host;~/Documentos/DAW/Foramación y orientación laboral I/Apuntes.org
+    
         this.port = port;
         this.rgb = rgb;
         try{
