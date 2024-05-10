@@ -42,6 +42,10 @@ public class MPPlayer extends JButton {
     }
 
 
+    public void startMove() {
+        new MovePlayer().start();
+    }
+
     private class MovePlayer extends Thread {
         private final double diagonalSpeed = 0.7071067811865476 * maxSpeed; // Math.cos(Math.PI/4) * maxSpeed;
 
@@ -113,8 +117,6 @@ public class MPPlayer extends JButton {
             }
             return false;
         });
-        MovePlayer mp = new MovePlayer();
-        mp.start();
     }
 
 

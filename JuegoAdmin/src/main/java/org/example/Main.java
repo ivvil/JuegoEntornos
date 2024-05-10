@@ -1,7 +1,8 @@
 package org.example;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
+import com.formdev.flatlaf.FlatDarkLaf;
+import org.example.utils.ProgressDialog;
+import org.example.utils.TextInput;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,18 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
-import org.example.utils.ProgressDialog;
-import org.example.utils.TextInput;
-
-import com.formdev.flatlaf.FlatDarkLaf;
+import java.awt.BorderLayout;
+import java.awt.Font;
 
 public class Main {
 
     private static ServerConnection serverConnection;
 
     public static void main(String[] args) {
-		if (System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") != null && !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
+		if ((System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") == null) || !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
             System.setProperty("sun.java2d.opengl", "True");
             
         try {
@@ -69,11 +67,6 @@ public class Main {
                 pd[0].setVisible(true); // If this is not in another thread the program will freeze until the dialog is closed
             }).start();
             try {
-                Thread.sleep(800); // Wait some time so we can appreciate the dialog
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            try {
                     serverConnection = new ServerConnection(host, Integer.parseInt(port));
                     result = serverConnection.connect();
                 } catch (NumberFormatException e) {
@@ -92,7 +85,8 @@ public class Main {
                 window.setVisible(false);
                 serverConnection.showWindow();
 			});
-		 
+
+        window.setLocationRelativeTo(null);
 		window.setVisible(true);
     }
 }

@@ -1,21 +1,22 @@
 package org.example;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import org.example.packets.admin.IAmAnAdminPacket;
-import org.example.packets.admin.StartGamePacket;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ServerConnection {
 
@@ -58,13 +59,15 @@ public class ServerConnection {
 			new Thread(() -> {
 				while(true){
 					try {
-						Object obj = objIn.readObject();
-						if(obj instanceof Integer){
-							currentPlayers = (int) obj;
-							updateInfo();
-						}
-					} catch (IOException | ClassNotFoundException e) {
+						currentPlayers = new ObjectInputStream(socket.getInputStream()).readInt();
+						updateInfo();
+					}catch (StreamCorruptedException e) {
+						currentPlayers++;
+						updateInfo();
+					}catch (IOException e) {
+						e.printStackTrace();
 						JOptionPane.showMessageDialog(null, "Error while reading object", "Error", JOptionPane.ERROR_MESSAGE);
+						System.out.println("Error while reading object: " + e.getMessage());
 					}
 				}
 			}).start();
@@ -90,7 +93,7 @@ public class ServerConnection {
 	public void showWindow(){
 		frame = new JFrame("Server");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 200);
+		frame.setSize(600, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 
@@ -99,16 +102,23 @@ public class ServerConnection {
 
 		JLabel title = new JLabel("Server info");
 		panel.add(title);
-		title.setFont(new Font("Arial", Font.BOLD, 20));
-		title.setBounds(170, 20, 400, 100);
+		title.setFont(new Font("Arial", Font.BOLD, 28));
+		title.setBounds(200, 20, 430, 100);
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		label = new JLabel("Players: " + currentPlayers + "/" + maxPlayers);
 		panel.add(label);
-		label.setBounds(50, 150, 400, 50);
+		Font font = new Font("Arial", Font.PLAIN, 24);
+		FontMetrics metrics = panel.getFontMetrics(font);
+		int textWidth = metrics.stringWidth("Players: " + currentPlayers + "/" + maxPlayers);
+		int frameWidth = frame.getWidth();
+		int x = (frameWidth - textWidth) / 2;
+		label.setFont(font);
+		label.setBounds(x, 100, 430, 100);
 
 		JButton startGame = new JButton("Start game");
 		panel.add(startGame);
+		startGame.setFont(new Font("Arial", Font.BOLD, 22));
 		startGame.setBounds(50, 250, 400, 50);
 
 		startGame.addActionListener(evt -> {
@@ -123,7 +133,7 @@ public class ServerConnection {
 		JLabel dummy = new JLabel(" ");
 		panel.add(dummy);
 
-
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
 

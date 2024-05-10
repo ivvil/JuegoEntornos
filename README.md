@@ -18,10 +18,11 @@
     - [x] Define a packet structure - victor
     - [x] Refactor the way enemies work - victor
     - [x] Listen for server sent packets - victor
-    - [ ] Handle server sent packets - ?
-    - [ ] Interprete server sent packets - ?
+    - [x] Handle server sent packets - victor
+    - [x] Menu for connecting to server - victor
+    - [x] Interprete server sent packets - victor
     - [ ] Send inputs to server - ?
-    - [ ] Menu for connecting to server - ?
+    
 
   - [ ] Server:
     - [x] Define a packet structure - victor
@@ -42,6 +43,8 @@
 
 ### Communication client-server (Multiplayer)
 
+Complete maybe?
+
 - [x] The client will send an integer on join or an admin packet is gameAdmin
   - [x] Server implementation - victor
   - [x] Client implementation - victor
@@ -54,12 +57,13 @@
 - [x] The server will send a start game packet to all clients
   - [x] Server implementation - victor
   - [x] Client implementation - victor
-- [ ] The server will start listening for player packets for every client
+- [x] The server will start listening for player packets for every client
   - [x] Server implementation - victor
-  - [ ] Client implementation
-- [ ] The server will start listening for enemy packets when a player hits and enemy sending the new enemy location
+  - [x] Client implementation - victor
+- [x] The server will start listening for enemy packets when a player hits and enemy sending the new enemy location
   - [x] Server implementation - victor
-  - [ ] Client implementation
+  - [x] Client implementation - victor
+
 
 ---
 ### Outline of an abstract connection between client and server

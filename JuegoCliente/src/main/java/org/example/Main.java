@@ -19,7 +19,7 @@ import java.awt.event.WindowEvent;
 public class Main {
     public static void main(String[] args) {
 
-        if (System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") != null && !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
+        if ((System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") == null) || !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
             System.setProperty("sun.java2d.opengl", "True");
 
         try {
@@ -136,6 +136,7 @@ public class Main {
         hostSelector.setResizable(false);
         hostSelector.setUndecorated(true);
         JPanel hostPanel = new JPanel(new BorderLayout());
+        hostSelector.add(hostPanel);
 
         JLabel title = new JLabel("Enter the server details");
         hostPanel.add(title);
@@ -156,10 +157,6 @@ public class Main {
         hostPanel.add(hostButton);
         hostButton.setBounds(210, 360, 350, 60);
         hostButton.setFont(new Font("Arial", Font.BOLD, 18));
-
-
-        hostSelector.add(hostPanel);
-        hostSelector.setVisible(true);
         String[] connection = new String[2];
         MPGame[] game = new MPGame[1];
         hostButton.addActionListener(e -> {
@@ -187,8 +184,7 @@ public class Main {
             Color playerColor = JColorChooser.showDialog(hostSelector, "Select a player color", new Color(51, 153, 255));
             game[0] = new MPGame(connection[0], pnum, playerColor.getRGB(), gameFrame[0]);
         });
-        hostSelector.setVisible(true);
-        hostSelector.setLocationRelativeTo(null);
+
 
         hostSelector.addWindowListener(new WindowAdapter() {
             @Override
@@ -223,5 +219,10 @@ public class Main {
                 System.gc();
             }
         });
+
+        hostPanel.add(new JLabel(" ")); // Dummy
+        hostSelector.setLocationRelativeTo(null);
+        hostSelector.setVisible(true);
+
     }
 }

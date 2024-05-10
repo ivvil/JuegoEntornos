@@ -12,10 +12,12 @@ public class MPEnemy extends JButton {
     private final int sleepTime = 10;
     private final int speed = 2;
     private final Random random;
+    private final int id;
 
-    public MPEnemy(MPGame game, int seed) {
+    public MPEnemy(MPGame game, int seed, int id) {
         random = new Random(seed);
         this.game = game;
+        this.id = id;
         setText("•_•");
         setBounds(genRandomPosition());
         setBackground(new Color(255, 50, 50));
@@ -92,7 +94,7 @@ public class MPEnemy extends JButton {
                     setLocation(genRandomPosition().getLocation());
                     this.direction = random.nextBoolean();
                     this.axis = random.nextBoolean();
-                    game.getConnection().sendEnemyMove(getLocation(), axis, direction, /* TODO*/);
+                    game.getConnection().sendEnemyMove(getLocation(), axis, direction, getEnemyId());
                 }
                 try {
                     Thread.sleep(sleepTime);
@@ -101,6 +103,10 @@ public class MPEnemy extends JButton {
                 }
             }
         }
+    }
+
+    public int getEnemyId() {
+        return id;
     }
 
     private boolean moveEnemy(Direction d) {

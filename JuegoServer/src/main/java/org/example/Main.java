@@ -1,9 +1,14 @@
 package org.example;
 
-import static org.example.Logger.error;
-import static org.example.Logger.info;
-import static org.example.Logger.warning;
+import org.example.packets.Packet;
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
+import org.example.packets.client.EnemyPacket;
+import org.example.packets.client.GamePacket;
+import org.example.packets.client.PlayerPacket;
+import org.example.packets.client.WallPacket;
 
+import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -14,15 +19,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
-
-import org.example.packets.Packet;
-import org.example.packets.admin.IAmAnAdminPacket;
-import org.example.packets.admin.StartGamePacket;
-import org.example.packets.client.EnemyPacket;
-import org.example.packets.client.GamePacket;
-import org.example.packets.client.PlayerPacket;
-import org.example.packets.client.WallPacket;
+import static org.example.Logger.error;
+import static org.example.Logger.info;
+import static org.example.Logger.warning;
 
 public class Main {
     private static final HashMap<Socket, Integer> clients = new HashMap<>();
@@ -48,7 +47,7 @@ public class Main {
 
         }, (int) (Math.random() * 1000), (int) (Math.random() * 1000), numEnemis, initialNumCoins);
 
-        int workers = Integer.parseInt(JOptionPane.showInputDialog("How many workers do you want to use?"));
+        int workers = Integer.parseInt(JOptionPane.showInputDialog(null, "How many workers do you want to use?"));
         if (workers > maxWorkers) {
             error("The number of workers is too high, using the maximum available: " + maxWorkers);
             workers = maxWorkers;
@@ -117,10 +116,15 @@ public class Main {
         return true;
     }
 
-    public static void onClientConnect(Socket socket){
+    public static void onClientConnect(Socket socket) {
         if (isGameStarted){
             warning("Client tried to connect after the game started");
             warning("The connection will be thrown");
+            try {
+                socket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
         try{
@@ -132,8 +136,8 @@ public class Main {
                 o = objIn.readObject();
                 if (o instanceof Integer i) {
                     if (players.size() >= maxPlayers) {
-                        // TODO: Send to the client that the server is full
                         warning("A client tried to connect but the server is full: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                        socket.close();
                         return;
                     }
                     int playerColor = i;
@@ -151,16 +155,10 @@ public class Main {
                     players.put(playerColor, pp[0]);
                     info("Player connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                     if (isAdminConnected){
-                        admin.getOutputStream().write(players.size());
+                        new ObjectOutputStream(admin.getOutputStream()).writeInt(players.size());
+                        info("Notifying admin of new player");
                     }
-                } else if (o instanceof StartGamePacket) {
-                    if (isAdminConnected && socket == admin) {
-                        info("Game started");
-                        startGame();
-                    }else {
-                        warning("A client tried to start the game without being the admin" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
-                    }
-                } else if (o instanceof IAmAnAdminPacket) {
+                }else if (o instanceof IAmAnAdminPacket) {
                     if (isAdminConnected){
                         warning("An admin tried to connect while another admin is already connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                         return;
@@ -170,6 +168,20 @@ public class Main {
                     isAdminConnected = true;
                     String data = players.size() + "|" + pool.getPoolSize();
                     objOut.writeObject(data);
+                    new Thread(() -> {
+                        while (true){
+                            try {
+                                Object obj = objIn.readObject();
+                                if (obj instanceof StartGamePacket){
+                                    info("Admin started the game");
+                                    startGame();
+                                    break;
+                                }
+                            } catch (IOException | ClassNotFoundException e){
+                                error("Error while reading object: " + e.getMessage());
+                            }
+                        }
+                    });
                 }
             } catch (ClassNotFoundException e){
                 error("Coudn't read object: " + e.getMessage());

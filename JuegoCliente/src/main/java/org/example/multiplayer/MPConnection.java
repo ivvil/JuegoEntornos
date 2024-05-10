@@ -56,7 +56,7 @@ public class MPConnection {
             if (!pp.equals(selfPlayer))
                 game.addPlayer(new MPPlayer(pp.getColor(), false, game, new Point(pp.getX(), pp.getY())));
         }
-
+        game.startGame();
         initListener();
     }
 
@@ -135,6 +135,10 @@ public class MPConnection {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void createEnemys(EnemyPacket ep){
+        game.addEnemy(new MPEnemy(game, game.getEnemyMovmentSeed(), ep.getId()));
     }
 
     public MPPlayer getSelfPlayer() {
