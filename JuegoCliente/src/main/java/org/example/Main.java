@@ -1,9 +1,6 @@
 package org.example;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-
-import javax.swing.UIManager;
-
 import org.example.multiplayer.MPGame;
 
 import javax.swing.JButton;
@@ -12,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -24,7 +21,7 @@ public class Main {
 
         if (System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") != null && !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
             System.setProperty("sun.java2d.opengl", "True");
-            
+
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (Exception e) {
@@ -79,7 +76,7 @@ public class Main {
 
         multiPlayer.addActionListener(e -> {
             menuFrame.setVisible(false);
-            
+
             newMultiPlayer(menuFrame);
         });
 
@@ -89,7 +86,41 @@ public class Main {
 
     }
 
-    private static void newMultiPlayer(JFrame menuFrame ) {
+    private static void newGame(JFrame[] gameFrame, JFrame menuFrame, Color playerColor, String name) {
+        if (gameFrame[0] != null)
+            gameFrame[0].dispose();
+        gameFrame[0] = new JFrame("Game");
+        int frameWidth = 1900;
+        int frameHeight = 1060;
+        Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame, (int) (Math.random() * 1000) + 1, (int) (Math.random() * 1000) + 1);
+        game.getPlayer().setBackground(playerColor);
+        float[] hsb = Color.RGBtoHSB(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), null);
+
+        if (hsb[2] < 0.5f)
+            game.getPlayer().setForeground(new Color(255, 255, 255));
+        else
+            game.getPlayer().setForeground(new Color(0, 0, 0));
+
+        game.getPlayer().setName(name);
+
+        gameFrame[0].add(game);
+        gameFrame[0].setSize(frameWidth, frameHeight);
+        gameFrame[0].setUndecorated(true);
+        gameFrame[0].setResizable(false);
+        gameFrame[0].setLocationRelativeTo(null);
+
+        gameFrame[0].addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                menuFrame.setVisible(true);
+                gameFrame[0].setVisible(false);
+                gameFrame[0].dispose();
+                gameFrame[0] = null;
+            }
+        });
+    }
+
+    private static void newMultiPlayer(JFrame menuFrame) {
         int frameWidth = 1900;
         int frameHeight = 1060;
 
@@ -139,16 +170,16 @@ public class Main {
                 JOptionPane.showMessageDialog(hostSelector, "Please enter valid details");
                 System.exit(1);
             }
-            if (!connection[0].equals("localhost") && !connection[0].matches("\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b")){
+            if (!connection[0].equals("localhost") && !connection[0].matches("\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b")) {
                 JOptionPane.showMessageDialog(hostSelector, "Invalid ip address", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
-            try{
+            try {
                 pnum = Integer.parseInt(connection[1]);
-                if (pnum < 0 || pnum > 0xFFFF){
+                if (pnum < 0 || pnum > 0xFFFF) {
                     throw new NumberFormatException();
                 }
-            } catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(hostSelector, "Invalid port number", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
@@ -158,13 +189,13 @@ public class Main {
         });
         hostSelector.setVisible(true);
         hostSelector.setLocationRelativeTo(null);
-        
+
         hostSelector.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 gameFrame[0].setVisible(false);
 
-                if (gameFrame[0] != null){
+                if (gameFrame[0] != null) {
                     gameFrame[0].dispose();
                     gameFrame[0] = null;
                 }
@@ -182,7 +213,7 @@ public class Main {
             public void windowClosing(WindowEvent e) {
                 menuFrame.setVisible(true);
                 gameFrame[0].setVisible(false);
-                if (gameFrame[0] != null){
+                if (gameFrame[0] != null) {
                     gameFrame[0].dispose();
                     gameFrame[0] = null;
                 }
@@ -190,40 +221,6 @@ public class Main {
                     game[0] = null;
                 menuFrame.setVisible(true);
                 System.gc();
-            }
-        });
-    }
-
-    private static void newGame(JFrame[] gameFrame, JFrame menuFrame, Color playerColor, String name) {
-        if (gameFrame[0] != null)
-            gameFrame[0].dispose();
-        gameFrame[0] = new JFrame("Game");
-        int frameWidth = 1900;
-        int frameHeight = 1060;
-        Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame,  (int) (Math.random() * 1000) + 1, (int) (Math.random() * 1000) + 1);
-        game.getPlayer().setBackground(playerColor);
-        float[] hsb = Color.RGBtoHSB(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), null);
-
-        if (hsb[2] < 0.5f)
-            game.getPlayer().setForeground(new Color(255, 255, 255));
-        else
-            game.getPlayer().setForeground(new Color(0, 0, 0));
-
-        game.getPlayer().setName(name);
-
-        gameFrame[0].add(game);
-        gameFrame[0].setSize(frameWidth, frameHeight);
-        gameFrame[0].setUndecorated(true);
-        gameFrame[0].setResizable(false);
-        gameFrame[0].setLocationRelativeTo(null);
-
-        gameFrame[0].addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                menuFrame.setVisible(true);
-                gameFrame[0].setVisible(false);
-                gameFrame[0].dispose();
-                gameFrame[0] = null;
             }
         });
     }

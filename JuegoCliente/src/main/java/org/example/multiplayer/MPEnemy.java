@@ -1,12 +1,11 @@
 package org.example.multiplayer;
 
+import org.example.Direction;
+
+import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Random;
-
-import javax.swing.JButton;
-
-import org.example.Direction;
 
 public class MPEnemy extends JButton {
     private final MPGame game;
@@ -93,7 +92,7 @@ public class MPEnemy extends JButton {
                     setLocation(genRandomPosition().getLocation());
                     this.direction = random.nextBoolean();
                     this.axis = random.nextBoolean();
-                    game.getConnection().sendEnemyMove(getLocation(), axis, direction);
+                    game.getConnection().sendEnemyMove(getLocation(), axis, direction, /* TODO*/);
                 }
                 try {
                     Thread.sleep(sleepTime);
