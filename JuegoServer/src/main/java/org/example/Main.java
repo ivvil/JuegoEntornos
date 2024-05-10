@@ -87,9 +87,9 @@ public class Main {
                         ObjectInputStream objIn = new ObjectInputStream(s.getInputStream());
                         Object o = objIn.readObject();
                         if (o instanceof PlayerPacket pp){
-                            sendPacketToEveryClient(pp);
+                            sendPacketToEveryClientExcept(pp, pp.getColor());
                         }else if (o instanceof EnemyPacket ep){
-                            sendPacketToEveryClient(ep);
+                            sendPacketToEveryClientExcept(ep, clients.get(s));
                         }else {
                             warning("Unknown packet received from client: " + o);
                         }
@@ -182,6 +182,19 @@ public class Main {
                 objOut.writeObject(p);
             } catch (IOException e){
                 error("Error while sending packet to client: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void sendPacketToEveryClientExcept(Packet p, int rgb){
+        for (Socket s : clients.keySet()){
+            if (clients.get(s) != rgb) {
+                try {
+                    ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
+                    objOut.writeObject(p);
+                } catch (IOException e) {
+                    error("Error while sending packet to client: " + e.getMessage());
+                }
             }
         }
     }
