@@ -199,7 +199,7 @@ public class Game extends JPanel {
                     gp.hideWindow();
                     JOptionPane.showMessageDialog(null, "\tYou died!\nCoins collected: " + coinsCount, "Game Over", JOptionPane.INFORMATION_MESSAGE);
                     Score s = new Score();
-                    s.setName(System.getProperty("user.name"));
+                    s.setName(player.getName());
                     s.setScore(coinsCount);
                     s.sendScore();
                     gp.jf.dispatchEvent(new WindowEvent(jf, WindowEvent.WINDOW_CLOSING));

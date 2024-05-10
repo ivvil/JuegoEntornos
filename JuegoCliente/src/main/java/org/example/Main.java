@@ -71,8 +71,9 @@ public class Main {
             menuFrame.setVisible(false);
 
             Color playerColor = JColorChooser.showDialog(menuFrame, "Select a player color", new Color(51, 153, 255));
+            String playerName = JOptionPane.showInputDialog(menuFrame, "Enter your name", "Player");
 
-            newGame(gameFrame, menuFrame, playerColor);
+            newGame(gameFrame, menuFrame, playerColor, playerName);
             gameFrame[0].setVisible(true);
         });
 
@@ -193,7 +194,7 @@ public class Main {
         });
     }
 
-    private static void newGame(JFrame[] gameFrame, JFrame menuFrame, Color playerColor) {
+    private static void newGame(JFrame[] gameFrame, JFrame menuFrame, Color playerColor, String name) {
         if (gameFrame[0] != null)
             gameFrame[0].dispose();
         gameFrame[0] = new JFrame("Game");
@@ -207,6 +208,8 @@ public class Main {
             game.getPlayer().setForeground(new Color(255, 255, 255));
         else
             game.getPlayer().setForeground(new Color(0, 0, 0));
+
+        game.getPlayer().setName(name);
 
         gameFrame[0].add(game);
         gameFrame[0].setSize(frameWidth, frameHeight);

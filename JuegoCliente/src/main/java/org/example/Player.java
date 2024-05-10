@@ -13,6 +13,7 @@ public class Player extends JButton {
     private final int maxHealth = 10;
     private double instantSpeed = maxSpeed;
     private int health = maxHealth;
+    private String name = "Player";
     private final Game game;
 
     // [0, 0] : Nothing pressed | [1, 0] : W pressed | [0, 1] : A pressed | [1, 1] : W and A pressed
@@ -32,6 +33,16 @@ public class Player extends JButton {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     private class MovePlayer extends Thread {
