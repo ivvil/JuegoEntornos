@@ -7,7 +7,7 @@
 - [X] Create a database with scores - mario
 - [X] Display the top scores in the game - mario
 - [X] Send the score to the server - mario
-- [ ] Use a cloud server to store the scores - mario
+- [X] Use a cloud server to store the scores - mario
 
 - [ ] Single player mode:
   - [x] Base game logic - victor
