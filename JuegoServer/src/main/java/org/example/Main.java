@@ -1,15 +1,18 @@
 package org.example;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
+import org.example.packets.admin.StartGamePacket;
 import org.example.packets.client.GamePacket;
 import org.example.packets.client.PlayerPacket;
 import org.example.packets.client.WallPacket;
@@ -17,17 +20,19 @@ import org.example.packets.client.WallPacket;
 import static org.example.Logger.*;
 
 public class Main {
+    private static final HashMap<Socket, Integer> clients = new HashMap<>();
+    private static final HashMap<Integer, PlayerPacket> players = new HashMap<>();
+    private static final int numEnemis = 10;
+    private static final int initialNumCoins = 10;
     private static final int port = 6942;
     private static ServerSocket serverSocket = null;
     private static ThreadPool pool = null;
-    private static HashMap<Socket, Integer> clients = new HashMap<>();
-    private static HashMap<Integer, PlayerPacket> players = new HashMap<>();
     private static GamePacket gamePacket = null;
-    private static int numEnemis = 10;
-    private static int initialNumCoins = 10;
+    private static boolean isGameStarted = false;
 
 
     public static void main(String[] args) {
+        Logger.setDebug(true);
         int maxWorkers = Runtime.getRuntime().availableProcessors();
         gamePacket = new GamePacket(new WallPacket[]{
             
@@ -44,12 +49,11 @@ public class Main {
         try {
             serverSocket = new ServerSocket(port);
         
-            InetAddress a = serverSocket.getInetAddress();            
-
+            InetAddress a = serverSocket.getInetAddress();
             info("Server started at " + a.getHostAddress() + ":" + port);
+            info("Server local host at " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
 
             while (true) {
-				// TODO Handle server packets 
                 Socket socket = serverSocket.accept();
                 info("Client connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 pool.execute(() -> {
@@ -64,7 +68,12 @@ public class Main {
         }
     }
 
+    public static Color genRandomColor(){
+        return new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
+    }
+
     public static void startGame(){
+        isGameStarted = true;
         for(Socket s : clients.keySet()){
             try{
                 ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
@@ -76,40 +85,50 @@ public class Main {
         }
     }
 
+    private static boolean isPosFree(int x, int y){
+        for (WallPacket w : gamePacket.getWalls()){
+            Rectangle r = new Rectangle(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+            if (r.intersects(x, y, 50, 50)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void onClientConnect(Socket socket){
+        if (isGameStarted){
+            warning("Client tried to connect after the game started");
+            warning("The connection will be thrown");
+            return;
+        }
         try{
             ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
             PlayerPacket[] pp = new PlayerPacket[1];
-            Object o = null;
+            Object o;
             try {
-                 o = objIn.readObject();
-                if (o instanceof PlayerPacket p){
-                    pp[0] = p;
+                o = objIn.readObject();
+                if (o instanceof Integer i) {
+                    int playerColor = i;
+                    while (players.containsKey(playerColor)) {
+                        playerColor = genRandomColor().getRGB();
+                    }
+                    PlayerPacket newPlayer = new PlayerPacket((int) (Math.random() * 1850), (int) (Math.random() * 1010), playerColor);
+                    while (!isPosFree(newPlayer.getX(), newPlayer.getY())) {
+                        newPlayer = new PlayerPacket((int) (Math.random() * 1850), (int) (Math.random() * 1010), playerColor);
+                    }
+                    pp[0] = newPlayer;
+                    objOut.writeObject(pp[0]);
                     gamePacket.addPlayer(pp[0]);
-                    clients.put(socket, pp[0].getColor());
-                    players.put(pp[0].getColor(), pp[0]);
-                    info("Player packet received: " + pp[0]);
-                }else{
-                    error("Invalid packet received: " + o + " " + o.getClass());
+                    clients.put(socket, playerColor);
+                    players.put(playerColor, pp[0]);
+                } else if (o instanceof StartGamePacket) {
+                    info("Game started");
+                    startGame();
                 }
             } catch (ClassNotFoundException e){
                 error("Coudn't read object: " + e.getMessage());
                 return;
-            }
-
-            // Do this only on game start
-            objOut.writeObject(gamePacket);
-            for (Socket s : clients.keySet()){
-                if (s != socket){
-                    pool.execute(() -> {
-                        try{
-                            objOut.writeObject(pp[0]);
-                        } catch (IOException e){
-                            error("Error while sending packet to client: " + e.getMessage() + " " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
-                        }
-                    });
-                }
             }
 
         }catch (IOException e){

@@ -41,30 +41,33 @@
     - [ ] Turn server off - iván
     - [ ] Start game
     - [ ] Restart game
+    
 
-## Comunicacion client-server (Multiplayer)
+---
+### Comunicacion client-server (Multiplayer)
 
-- [ ] The client will send an integer on join or an admin packet is is gameAdmin
-  - [ ] Server implementation - victor
-  - [x] Cleint implementation - ?
-- [ ] The server will send back a PlayerPacket with the color recived as an integer in previos request
-  - [ ] Server implementation - ?
+- [x] The client will send an integer on join or an admin packet is is gameAdmin
+  - [x] Server implementation - victor
+  - [x] Cleint implementation - victor
+- [x] The server will send back a PlayerPacket with the color recived as an integer in previos request
+  - [x] Server implementation - victor
   - [x] Client implementation - victor
 - [ ] The server will wait for the admin to send a start game packet
   - [ ] Server implementation
   - [ ] Admin implementation
-- [ ] The server will send a start game packet to all clients or the game packet to all clients
+- [x] The server will send a start game packet to all clients
   - [x] Server implementation - victor
   - [x] Client implementation - victor
 - [ ] The server will start listening for player packets packets for every client
-  - [x] Server implementation - victor
+  - [ ] Server implementation - ?
   - [ ] Client implementation
 - [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
-  - [x] Server implementation - victor
+  - [ ] Server implementation - ?
   - [ ] Client implementation
+
+---
 
 ### Outline of an abstract connection between client an the server
 
-First, to initialize the connection, the cliento should send a packet outlining it's connection type (client or admin) and that it's trying to connect, then the server should respond with a similar packet replying with it's intent (connect) and it's type (server). This establishes the connection and ensures that the client and the server can communicate.
-
-To end the connection we should use a similar handshake, but using disconnect intents.
+The server can only have a limited amount of threads so the max number of players that can be connected has to be
+the number of threads used on the server
