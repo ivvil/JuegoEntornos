@@ -1,5 +1,14 @@
 package org.example;
 
+import org.example.packets.Packet;
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
+import org.example.packets.client.EnemyPacket;
+import org.example.packets.client.GamePacket;
+import org.example.packets.client.PlayerPacket;
+import org.example.packets.client.WallPacket;
+
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,15 +16,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import javax.swing.JOptionPane;
-
-import org.example.packets.admin.StartGamePacket;
-import org.example.packets.client.GamePacket;
-import org.example.packets.client.PlayerPacket;
-import org.example.packets.client.WallPacket;
 
 import static org.example.Logger.*;
 
@@ -28,7 +29,10 @@ public class Main {
     private static ServerSocket serverSocket = null;
     private static ThreadPool pool = null;
     private static GamePacket gamePacket = null;
+    private static Socket admin = null;
     private static boolean isGameStarted = false;
+    private static boolean isAdminConnected = false;
+    private static int maxPlayers;
 
 
     public static void main(String[] args) {
@@ -45,6 +49,7 @@ public class Main {
             error("The number of workers is too high, using the maximum available: " + maxWorkers);
             workers = maxWorkers;
         }
+        maxPlayers = workers - 1;
         pool = new ThreadPool(workers);
         try {
             serverSocket = new ServerSocket(port);
@@ -74,14 +79,27 @@ public class Main {
 
     public static void startGame(){
         isGameStarted = true;
-        for(Socket s : clients.keySet()){
-            try{
-                ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
-                objOut.writeObject(gamePacket);
-                // TODO: Start listening for player packets
-            } catch (IOException e){
-                error("Error while sending game packet to client: " + e.getMessage());
-            }
+        sendPacketToEveryClient(gamePacket);
+        for (Socket s : clients.keySet()){
+            pool.execute(() -> {
+                while (true){
+                    try{
+                        ObjectInputStream objIn = new ObjectInputStream(s.getInputStream());
+                        Object o = objIn.readObject();
+                        if (o instanceof PlayerPacket pp){
+                            sendPacketToEveryClient(pp);
+                        }else if (o instanceof EnemyPacket ep){
+                            sendPacketToEveryClient(ep);
+                        }else {
+                            warning("Unknown packet received from client: " + o);
+                        }
+                    } catch (IOException e){
+                        error("Error while reading object: " + e.getMessage());
+                    } catch (ClassNotFoundException e){
+                        error("Error while reading object: " + e.getMessage());
+                    }
+                }
+            });
         }
     }
 
@@ -109,6 +127,11 @@ public class Main {
             try {
                 o = objIn.readObject();
                 if (o instanceof Integer i) {
+                    if (players.size() >= maxPlayers) {
+                        // TODO: Send to the client that the server is full
+                        warning("A client tried to connect but the server is full: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                        return;
+                    }
                     int playerColor = i;
                     while (players.containsKey(playerColor)) {
                         playerColor = genRandomColor().getRGB();
@@ -122,63 +145,44 @@ public class Main {
                     gamePacket.addPlayer(pp[0]);
                     clients.put(socket, playerColor);
                     players.put(playerColor, pp[0]);
+                    info("Player connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                    if (isAdminConnected){
+                        admin.getOutputStream().write(players.size());
+                    }
                 } else if (o instanceof StartGamePacket) {
-                    info("Game started");
-                    startGame();
+                    if (isAdminConnected && socket == admin) {
+                        info("Game started");
+                        startGame();
+                    }else {
+                        warning("A client tried to start the game without being the admin" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                    }
+                } else if (o instanceof IAmAnAdminPacket) {
+                    if (isAdminConnected){
+                        warning("An admin tried to connect while another admin is already connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                        return;
+                    }
+                    info("Admin connected to the server");
+                    admin = socket;
+                    isAdminConnected = true;
+                    String data = players.size() + "|" + pool.getPoolSize();
+                    objOut.writeObject(data);
                 }
             } catch (ClassNotFoundException e){
                 error("Coudn't read object: " + e.getMessage());
-                return;
             }
-
         }catch (IOException e){
             error("Error while creating output stream: " + e.getMessage());
         }
-
     }
 
-
-    // // Use this when the game is started to process the cleint sended packets
-    // private static void poocessRequest(Socket socket) throws IOException {
-    //     ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
-    //     ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
-        
-    //     try {
-    //         Object o = objIn.readObject();
-    //         if (o instanceof PlayerPacket pp){
-    //             info("Player packet received: " + pp);
-    //             for (Socket s : clients.keySet()){
-    //                 if (s != socket){
-    //                     pool.execute(() -> {
-    //                         try{
-    //                             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-    //                             out.writeObject(pp);
-    //                         } catch (IOException e){
-    //                             error("Error while sending packet to client: " + e.getMessage());
-    //                         }
-    //                     });
-    //                 }
-    //             }
-
-    //         }else if(o instanceof EnemyPacket ep){
-    //             info("Enemy packet received: " + ep);
-    //             for (Socket s : clients.keySet()){
-    //                 if (s != socket){
-    //                     pool.execute(() -> {
-    //                         try{
-    //                             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-    //                             out.writeObject(ep);
-    //                         } catch (IOException e){
-    //                             error("Error while sending packet to client: " + e.getMessage());
-    //                         }
-    //                     });
-    //                 }
-    //             }
-    //         }
-    //     }catch (Exception e){
-    //         error("Coudnt process request from:  " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + " -> " + e.getMessage());
-    //     }
-        
-    //     socket.close();
-    // }
+    private static void sendPacketToEveryClient(Packet p){
+        for (Socket s : clients.keySet()){
+            try{
+                ObjectOutputStream objOut = new ObjectOutputStream(s.getOutputStream());
+                objOut.writeObject(p);
+            } catch (IOException e){
+                error("Error while sending packet to client: " + e.getMessage());
+            }
+        }
+    }
 }

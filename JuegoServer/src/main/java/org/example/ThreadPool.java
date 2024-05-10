@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import static org.example.Logger.*;
 
 public class ThreadPool {
@@ -20,6 +21,10 @@ public class ThreadPool {
 
     public void execute(Runnable task) {
         queue.add(task);
+    }
+
+    public int getPoolSize() {
+        return workers.length;
     }
 
     public void shutdown() {

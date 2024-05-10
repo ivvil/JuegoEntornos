@@ -1,6 +1,10 @@
 package org.example;
 
-import javax.swing.JOptionPane;
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,9 +17,14 @@ public class ServerConnection {
 	private final int port;
 
 	private Socket socket;
+	private int currentPlayers;
+	private int maxPlayers;
 	
-	private ObjectOutputStream outputStream;
-	private ObjectInputStream inputStream;
+	private ObjectOutputStream objOut;
+	private ObjectInputStream objIn;
+
+	private JFrame frame;
+	private JLabel label;
 	
 	public ServerConnection(String host, int port) {
 		this.host = host;
@@ -28,27 +37,90 @@ public class ServerConnection {
 				JOptionPane.showMessageDialog(null, "Host must be a valid IP address", "Error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			// socket = new Socket(host, port);
-			boolean io = false;
-			boolean uh = false;
+			socket = new Socket(host, port);
 
-			// outputStream = new ObjectOutputStream(socket.getOutputStream());
-			// inputStream = new ObjectInputStream(socket.getInputStream());
-			if (io)
-				throw new IOException("Connection error");
-			if (uh)
-				throw new UnknownHostException("Unknown Host error");
+			objOut = new ObjectOutputStream(socket.getOutputStream());
+			objIn = new ObjectInputStream(socket.getInputStream());
+
+			objOut.writeObject(new IAmAnAdminPacket());
+
+			String data = (String) objIn.readObject();
+			String[] split = data.split("\\|");
+			currentPlayers = Integer.parseInt(split[0]);
+			maxPlayers = Integer.parseInt(split[1]);
+
+			new Thread(() -> {
+				while(true){
+					try {
+						Object obj = objIn.readObject();
+						if(obj instanceof Integer){
+							currentPlayers = (int) obj;
+							updateInfo();
+						}
+					} catch (IOException | ClassNotFoundException e) {
+						JOptionPane.showMessageDialog(null, "Error while reading object", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}).start();
+
 		}catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Unknown Host error", "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Connection error", "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
-		}
-		return true;
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "Class not found error", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+        }
+        return true;
 	}
 
-	
-	
+	public void updateInfo(){
+		label.setText("Players: " + currentPlayers + "/" + maxPlayers);
+		label.repaint();
+	}
+
+	public void showWindow(){
+		frame = new JFrame("Server");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(300, 200);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		frame.add(panel);
+
+		JLabel title = new JLabel("Server info");
+		panel.add(title);
+		title.setFont(new Font("Arial", Font.BOLD, 20));
+		title.setBounds(170, 20, 400, 100);
+		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+		label = new JLabel("Players: " + currentPlayers + "/" + maxPlayers);
+		panel.add(label);
+		label.setBounds(50, 150, 400, 50);
+
+		JButton startGame = new JButton("Start game");
+		panel.add(startGame);
+		startGame.setBounds(50, 250, 400, 50);
+
+		startGame.addActionListener(evt -> {
+			try {
+				objOut.writeObject(new StartGamePacket());
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Error while sending object", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+
+
+		JLabel dummy = new JLabel(" ");
+		panel.add(dummy);
+
+
+		frame.setVisible(true);
+
+
+	}
 }
 

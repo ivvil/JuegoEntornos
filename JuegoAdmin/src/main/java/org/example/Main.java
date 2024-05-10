@@ -1,20 +1,11 @@
 package org.example;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
 import com.formdev.flatlaf.FlatDarkLaf;
-
 import org.example.utils.ProgressDialog;
 import org.example.utils.TextInput;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
@@ -89,6 +80,8 @@ public class Main {
 
                 pd[0].setVisible(false);
                 System.out.println("Connected to server");
+                window.setVisible(false);
+                serverConnection.showWindow();
 			});
 		 
 		window.setVisible(true);

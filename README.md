@@ -19,7 +19,7 @@
 - [ ] Multiplayer mode:
   - [ ] Client:
     - [x] Define a packet structure - victor
-    - [ ] Refactor the way enemies work - ?
+    - [x] Refactor the way enemies work - victor
     - [x] Listen for server sent packets - victor
     - [ ] Handle server sent packets - ?
     - [ ] Interprete server sent packets - ?
@@ -28,46 +28,45 @@
 
   - [ ] Server:
     - [x] Define a packet structure - victor
-    - [x] Listen for packets and send them to all clients - victor
-    - [ ] Workout how to shut down the server - ?
+    - [x] Listen for packets and send them to all clients - victor 
     - [ ] Checks fow when the match is over - ?
     - [x] Send level data / enemy data to client on join - victor
     - [x] Send initial data to player - victor
-    - [ ] Workout how to start the game - ?
-    - [ ] Implement admin app api - iván
+    - [x] Workout how to start the game - ivan, victor
+    - [x] Implement admin app api - iván, victor
 	
   - [ ] Admin app:
-    - [ ] Discover and connect to server - iván
-    - [ ] Turn server off - iván
-    - [ ] Start game
+    - [x] Discover and connect to server - iván, victor
+    - [ ] Turn server off - iván 
+    - [x] Start game - victor
     - [ ] Restart game
     
 
 ---
-### Comunicacion client-server (Multiplayer)
+### Communication client-server (Multiplayer)
 
-- [x] The client will send an integer on join or an admin packet is is gameAdmin
-  - [x] Server implementation - victor
-  - [x] Cleint implementation - victor
-- [x] The server will send back a PlayerPacket with the color recived as an integer in previos request
+- [x] The client will send an integer on join or an admin packet is gameAdmin
   - [x] Server implementation - victor
   - [x] Client implementation - victor
-- [ ] The server will wait for the admin to send a start game packet
-  - [ ] Server implementation
-  - [ ] Admin implementation
+- [x] The server will send back a PlayerPacket with the color received as an integer in previos request
+  - [x] Server implementation - victor
+  - [x] Client implementation - victor
+- [x] The server will wait for the admin to send a start game packet
+  - [x] Server implementation - victor
+  - [x] Admin implementation - victor
 - [x] The server will send a start game packet to all clients
   - [x] Server implementation - victor
   - [x] Client implementation - victor
-- [ ] The server will start listening for player packets packets for every client
-  - [ ] Server implementation - ?
+- [ ] The server will start listening for player packets for every client
+  - [x] Server implementation - victor
   - [ ] Client implementation
-- [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
-  - [ ] Server implementation - ?
+- [ ] The server will start listening for enemy packets when a player hits and enemy sending the new enemy location
+  - [x] Server implementation - victor
   - [ ] Client implementation
 
 ---
 
-### Outline of an abstract connection between client an the server
+### Outline of an abstract connection between client and server
 
 The server can only have a limited amount of threads so the max number of players that can be connected has to be
 the number of threads used on the server
