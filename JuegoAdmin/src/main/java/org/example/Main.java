@@ -1,11 +1,20 @@
 package org.example;
 
-import com.formdev.flatlaf.FlatDarkLaf;
+import java.awt.BorderLayout;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+
 import org.example.utils.ProgressDialog;
 import org.example.utils.TextInput;
 
-import javax.swing.*;
-import java.awt.*;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 public class Main {
 

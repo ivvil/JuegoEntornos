@@ -1,10 +1,5 @@
 package org.example;
 
-import org.example.highscore.HighScoreTable;
-import org.example.highscore.Score;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -12,6 +7,16 @@ import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.util.Random;
 import java.util.Vector;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import org.example.highscore.HighScoreTable;
+import org.example.highscore.Score;
 
 public class Game extends JPanel {
 

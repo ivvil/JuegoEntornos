@@ -1,15 +1,11 @@
 package org.example;
 
-import org.example.packets.Packet;
-import org.example.packets.admin.IAmAnAdminPacket;
-import org.example.packets.admin.StartGamePacket;
-import org.example.packets.client.EnemyPacket;
-import org.example.packets.client.GamePacket;
-import org.example.packets.client.PlayerPacket;
-import org.example.packets.client.WallPacket;
+import static org.example.Logger.error;
+import static org.example.Logger.info;
+import static org.example.Logger.warning;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,7 +14,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import static org.example.Logger.*;
+import javax.swing.JOptionPane;
+
+import org.example.packets.Packet;
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
+import org.example.packets.client.EnemyPacket;
+import org.example.packets.client.GamePacket;
+import org.example.packets.client.PlayerPacket;
+import org.example.packets.client.WallPacket;
 
 public class Main {
     private static final HashMap<Socket, Integer> clients = new HashMap<>();

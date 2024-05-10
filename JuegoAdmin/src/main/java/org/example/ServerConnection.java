@@ -1,15 +1,21 @@
 package org.example;
 
-import org.example.packets.admin.IAmAnAdminPacket;
-import org.example.packets.admin.StartGamePacket;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import org.example.packets.admin.IAmAnAdminPacket;
+import org.example.packets.admin.StartGamePacket;
 
 public class ServerConnection {
 
