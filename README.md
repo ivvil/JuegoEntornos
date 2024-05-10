@@ -44,9 +44,12 @@
 
 ## Comunicacion client-server (Multiplayer)
 
-- [ ] The client will send a playerpacket on join or an admin packet is is gameAdmin
-  - [x] Server implementation - victor
-  - [x] Cleint implementation - victor
+- [ ] The client will send an integer on join or an admin packet is is gameAdmin
+  - [ ] Server implementation - victor
+  - [x] Cleint implementation - ?
+- [ ] The server will send back a PlayerPacket with the color recived as an integer in previos request
+  - [ ] Server implementation - ?
+  - [x] Client implementation - victor
 - [ ] The server will wait for the admin to send a start game packet
   - [ ] Server implementation
   - [ ] Admin implementation

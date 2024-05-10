@@ -18,16 +18,21 @@ public class MPGame extends JPanel{
     private final Vector<MPPlayer> onlinePlayers;
     private final MPConnection connection;
     private final JFrame frame;
+    private int enemySeed;
+    private int enemyAmount;
+    private int coinSeed;
+    private int coinAmount;
 
 
     public MPGame(String host, int port, int rgb, JFrame frame){
         this.frame = frame;
         this.currentPlayerRGB = rgb;
-        this.connection = MPConnection.newConnection(host, port, rgb);
         this.walls = new Vector<>();
         this.onlinePlayers = new Vector<>();
         this.enemys = new Vector<>();
-        this.player = new MPPlayer(rgb, true, this);
+        this.connection = MPConnection.newConnection(host, port, rgb, this);
+        this.player = connection.getSelfPlayer();
+
 
         if (connection == null){
             JOptionPane.showMessageDialog(null, "Error connecting to server\nCheck the console for details", "Error", JOptionPane.ERROR_MESSAGE);
@@ -90,6 +95,34 @@ public class MPGame extends JPanel{
                     return true;
         }
         return checkColision(r);
+    }
+
+    public void addEnemy(MPEnemy e){
+        enemys.add(e);
+    }
+
+    public void addPlayer(MPPlayer p){
+        onlinePlayers.add(p);
+    }
+
+    public void setEnemySeed(int seed){
+        enemySeed = seed;
+    }
+
+    public void setEnemyAmount(int amount){
+        enemyAmount = amount;
+    }
+
+    public void setCoinSeed(int seed){
+        coinSeed = seed;
+    }
+
+    public void setCoinAmount(int amount){
+        coinAmount = amount;
+    }
+
+    public void addWall(Wall w){
+        walls.add(w);
     }
 
 }

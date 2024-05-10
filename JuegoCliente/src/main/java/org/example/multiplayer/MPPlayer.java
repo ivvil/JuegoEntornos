@@ -21,7 +21,7 @@ public class MPPlayer extends JButton {
     //[-1 , 0]: S pressed | [0, -1] : D pressed | [-1, -1] : S and D pressed | [1, -1] : W and D pressed | [-1, 1] : S and A pressed
     private final byte[] inputMap = new byte[2];
     
-    public MPPlayer(int rgb, boolean isSelf, MPGame game){
+    public MPPlayer(int rgb, boolean isSelf, MPGame game, Point initialPos){
         this.rgb = rgb;
         this.game = game;
         if (isSelf){
