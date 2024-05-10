@@ -11,10 +11,9 @@
 
 - [ ] Single player mode:
   - [x] Base game logic - victor
-  - [ ] Improve gameplay - ivan
-      - [x] Improve movement - victor
+  - [x] Refactor the way enemies work - victor
+  - [x] Use seed for enemy and coin generation - victor
   - [ ] Add levels (arenas) - TODO: pablo
-  - [ ] Refactor the way enemies work - ?
 
 - [ ] Multiplayer mode:
   - [ ] Client:
@@ -29,16 +28,16 @@
   - [ ] Server:
     - [x] Define a packet structure - victor
     - [x] Listen for packets and send them to all clients - victor 
-    - [ ] Checks fow when the match is over - ?
     - [x] Send level data / enemy data to client on join - victor
     - [x] Send initial data to player - victor
     - [x] Workout how to start the game - ivan, victor
     - [x] Implement admin app api - iván, victor
+    - [ ] Checks fow when the match is over - ?
 	
   - [ ] Admin app:
     - [x] Discover and connect to server - iván, victor
-    - [ ] Turn server off - iván 
     - [x] Start game - victor
+    - [ ] Turn server off - iván 
     - [ ] Restart game
     
 
