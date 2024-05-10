@@ -8,10 +8,13 @@ public class Admin {
 		SHUTDOWN_SERVER
 	}
 
-	private Action action;
+	private final Action action;
 
 	public Admin(Action action) {
 		this.action = action;
 	}
-	
+
+	public Action getAction() {
+		return action;
+	}
 }

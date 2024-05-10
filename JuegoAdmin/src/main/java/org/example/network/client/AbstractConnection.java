@@ -47,10 +47,12 @@ public abstract class AbstractConnection implements Connection {
 		outputStream = new ObjectOutputStream(socket.getOutputStream());
 		inputStream = new ObjectInputStream(socket.getInputStream());
 
-		sendObj(new org.example.network.packets.Connection(type, checkConnection()));
+		sendObj(new org.example.network.packets.Connection(type, ConnectionStatus.CONNECTED)); // Send a connected package to notify the server
 	}
 
 	protected void stopConnection() throws IOException {
+		sendObj(new org.example.network.packets.Connection(type, ConnectionStatus.DISCONNECTED)); // Before closing down the connection we notify the server by sending it a disconected status
+		
 		outputStream.close();
 		inputStream.close();
 
