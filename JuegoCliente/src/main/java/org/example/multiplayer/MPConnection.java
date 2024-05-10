@@ -39,6 +39,8 @@ public class MPConnection {
 
     public MPConnection(String host, int port, int rgb) throws UnknownHostException, IOException{
         this.rgb = rgb;
+        this.host = host;
+        this.port = port;
         try{
             this.socket = new Socket(host, port);
             this.objIn = new ObjectInputStream(socket.getInputStream());
