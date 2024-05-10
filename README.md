@@ -1,8 +1,6 @@
 
 # A Simple Swing Game
 
----
-
 ## Roadmap 
 - [X] Create a database with scores - mario
 - [X] Display the top scores in the game - mario
@@ -11,10 +9,9 @@
 
 - [ ] Single player mode:
   - [x] Base game logic - victor
-  - [ ] Improve gameplay - ivan
-      - [x] Improve movement - victor
+  - [x] Refactor the way enemies work - victor
+  - [x] Use seed for enemy and coin generation - victor
   - [ ] Add levels (arenas) - TODO: pablo
-  - [ ] Refactor the way enemies work - ?
 
 - [ ] Multiplayer mode:
   - [ ] Client:
@@ -29,20 +26,20 @@
   - [ ] Server:
     - [x] Define a packet structure - victor
     - [x] Listen for packets and send them to all clients - victor 
-    - [ ] Checks fow when the match is over - ?
     - [x] Send level data / enemy data to client on join - victor
     - [x] Send initial data to player - victor
     - [x] Workout how to start the game - ivan, victor
     - [x] Implement admin app api - iván, victor
+    - [ ] Checks fow when the match is over - ?
 	
   - [ ] Admin app:
     - [x] Discover and connect to server - iván, victor
-    - [ ] Turn server off - iván 
     - [x] Start game - victor
+    - [ ] Turn server off - iván 
     - [ ] Restart game
-    
 
 ---
+
 ### Communication client-server (Multiplayer)
 
 - [x] The client will send an integer on join or an admin packet is gameAdmin
@@ -65,7 +62,6 @@
   - [ ] Client implementation
 
 ---
-
 ### Outline of an abstract connection between client and server
 
 The server can only have a limited amount of threads so the max number of players that can be connected has to be
