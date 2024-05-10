@@ -59,3 +59,9 @@
 - [ ] The server will start listening for enemy packets when a player hits and enemy sening the new enemy location
   - [x] Server implementation - victor
   - [ ] Client implementation
+
+### Outline of an abstract connection between client an the server
+
+First, to initialize the connection, the cliento should send a packet outlining it's connection type (client or admin) and that it's trying to connect, then the server should respond with a similar packet replying with it's intent (connect) and it's type (server). This establishes the connection and ensures that the client and the server can communicate.
+
+To end the connection we should use a similar handshake, but using disconnect intents.

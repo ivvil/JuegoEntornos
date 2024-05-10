@@ -49,7 +49,7 @@ public class Main {
             info("Server started at " + a.getHostAddress() + ":" + port);
 
             while (true) {
-                
+				// TODO Handle server packets 
                 Socket socket = serverSocket.accept();
                 info("Client connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 pool.execute(() -> {
