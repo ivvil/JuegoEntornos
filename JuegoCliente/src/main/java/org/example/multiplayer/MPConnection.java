@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.SQLOutput;
 import java.util.HashMap;
 
 import org.example.Wall;
@@ -17,7 +16,7 @@ import org.example.packets.client.PlayerPacket;
 import org.example.packets.client.WallPacket;
 
 public class MPConnection {
-	
+
     private final int rgb;
     private final Socket socket;
     private final HashMap<Integer, PlayerPacket> players = new HashMap<>();
