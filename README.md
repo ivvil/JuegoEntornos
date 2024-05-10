@@ -1,8 +1,6 @@
 
 # A Simple Swing Game
 
----
-
 ## Roadmap 
 - [X] Create a database with scores - mario
 - [X] Display the top scores in the game - mario
@@ -39,9 +37,9 @@
     - [x] Start game - victor
     - [ ] Turn server off - iván 
     - [ ] Restart game
-    
 
 ---
+
 ### Communication client-server (Multiplayer)
 
 - [x] The client will send an integer on join or an admin packet is gameAdmin
@@ -64,7 +62,6 @@
   - [ ] Client implementation
 
 ---
-
 ### Outline of an abstract connection between client and server
 
 The server can only have a limited amount of threads so the max number of players that can be connected has to be
