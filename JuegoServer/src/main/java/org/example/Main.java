@@ -155,7 +155,9 @@ public class Main {
                     players.put(playerColor, pp[0]);
                     info("Player connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                     if (isAdminConnected){
-                        new ObjectOutputStream(admin.getOutputStream()).writeInt(players.size());
+                        ObjectOutputStream ois = new ObjectOutputStream(admin.getOutputStream());
+                        ois.writeInt(players.size());
+                        ois.close();
                         info("Notifying admin of new player");
                     }
                 }else if (o instanceof IAmAnAdminPacket) {

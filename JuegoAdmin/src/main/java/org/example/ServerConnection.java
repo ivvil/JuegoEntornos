@@ -59,8 +59,10 @@ public class ServerConnection {
 			new Thread(() -> {
 				while(true){
 					try {
-						currentPlayers = new ObjectInputStream(socket.getInputStream()).readInt();
+						ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+						currentPlayers = ois.readInt();
 						updateInfo();
+						ois.close();
 					}catch (StreamCorruptedException e) {
 						currentPlayers++;
 						updateInfo();
@@ -69,6 +71,7 @@ public class ServerConnection {
 						JOptionPane.showMessageDialog(null, "Error while reading object", "Error", JOptionPane.ERROR_MESSAGE);
 						System.out.println("Error while reading object: " + e.getMessage());
 					}
+
 				}
 			}).start();
 
