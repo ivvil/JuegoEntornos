@@ -12,14 +12,16 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
 
-        if ((System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") == null) || !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
+        if ((System.getProperty("os.name").equals("Linux") && System.getenv("__GLX_VENDOR_LIBRARY_NAME") == null) || System.getenv("__GLX_VENDOR_LIBRARY_NAME") != null && !System.getenv("__GLX_VENDOR_LIBRARY_NAME").equals("nvidia")) // If not nvidia and linux
             System.setProperty("sun.java2d.opengl", "True");
 
         try {
@@ -94,8 +96,11 @@ public class Main {
         if (gameFrame[0] != null)
             gameFrame[0].dispose();
         gameFrame[0] = new JFrame("Game");
-        int frameWidth = 1900;
-        int frameHeight = 1060;
+        Dimension display = Toolkit.getDefaultToolkit().getScreenSize();
+        int frameWidth = display.width;
+        int frameHeight = display.height;
+
+
         Game game = new Game(frameWidth, frameHeight, gameFrame[0], menuFrame, (int) (Math.random() * 1000) + 1, (int) (Math.random() * 1000) + 1);
         game.getPlayer().setBackground(playerColor);
         float[] hsb = Color.RGBtoHSB(playerColor.getRed(), playerColor.getGreen(), playerColor.getBlue(), null);
@@ -112,6 +117,7 @@ public class Main {
         gameFrame[0].setUndecorated(true);
         gameFrame[0].setResizable(false);
         gameFrame[0].setLocationRelativeTo(null);
+        gameFrame[0].setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         gameFrame[0].addWindowListener(new WindowAdapter() {
             @Override
@@ -127,6 +133,7 @@ public class Main {
     private static void newMultiPlayer(JFrame menuFrame) {
         int frameWidth = 1900;
         int frameHeight = 1060;
+
 
         JFrame[] gameFrame = new JFrame[1];
         gameFrame[0] = new JFrame("Game");
