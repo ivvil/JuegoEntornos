@@ -51,10 +51,28 @@ public class Game extends JPanel {
         add(coinsCounter);
         coinsCounter.setBounds(ccX, height - 80, width, 50);
 
+        // Define walls                         vscode -> MARK: walls  
+        Wall[] ws = new Wall[]{
+            new Wall(100, 100, 100, 100),
+            new Wall(100, getHeight() - 200, 100, 100),
+            new Wall(getWidth() - 500, 100, 100, 100),
+            new Wall(getWidth() - 500, getHeight() - 200, 100, 100),
+            new Wall(getWidth() / 2 - 50, getHeight() / 2 - 50, 100, 100),
+        };
+        walls = new Vector<>();
+        for (Wall w : ws){
+            walls.add(w);
+            add(w);
+        }
+
         // Define player                        vscode -> MARK: player
         this.player = new Player(this);
         add(player);
-        player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
+        Rectangle playerPos = new Rectangle((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
+        while (checkColision(playerPos)) {
+            playerPos.setLocation((int) (playerPos.getX()) + 10,(int) ( playerPos.getY()) + 10);
+        }
+        player.setBounds(playerPos);
 
         playerHealth = new JLabel("Health: " + player.getHealth());
         playerHealth.setFont(new Font("Arial", Font.BOLD, 20));
@@ -62,13 +80,6 @@ public class Game extends JPanel {
         int phX = width / 2 - fm.stringWidth(playerHealth.getText()) / 2;
         add(playerHealth);
         playerHealth.setBounds(phX, height - 120, width, 50);
-        
-
-        // Define walls                         vscode -> MARK: walls  
-        walls = new Vector<>();
-        Wall w1 = new Wall(40, 900, 800, 10);
-        add(w1);
-        walls.add(w1);
 
         // Define enemys                        vscode -> MARK: enemys
         enemys = new Vector<>();
