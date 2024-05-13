@@ -57,25 +57,25 @@ public class ServerConnection {
 			maxPlayers = Integer.parseInt(split[1]);
 
 			new Thread(() -> {
-				while(true){
-					try {
-						ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-						currentPlayers = ois.readInt();
-						updateInfo();
-						ois.close();
-					}catch (StreamCorruptedException e) {
-						currentPlayers++;
-						updateInfo();
-					}catch (IOException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Error while reading object", "Error", JOptionPane.ERROR_MESSAGE);
-						System.out.println("Error while reading object: " + e.getMessage());
-					}
+					while(true){
+						try {
+							ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+							currentPlayers = ois.readInt();
+							updateInfo();
+							ois.close();
+						}catch (StreamCorruptedException e) {
+							currentPlayers++;
+							updateInfo();
+						}catch (IOException e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(null, "Error while reading object", "Error", JOptionPane.ERROR_MESSAGE);
+							System.out.println("Error while reading object: " + e.getMessage());
+						}
 
-				}
+					}
 			}).start();
 
-		}catch (UnknownHostException e) {
+		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Unknown Host error", "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} catch (IOException e) {
@@ -124,13 +124,19 @@ public class ServerConnection {
 		startGame.setFont(new Font("Arial", Font.BOLD, 22));
 		startGame.setBounds(50, 250, 400, 50);
 
+		JButton stopServer = new JButton("Shutdown server");
+		panel.add(stopServer);
+		stopServer.setFont(new Font("Arial", Font.BOLD, 22));
+		stopServer.setBounds(100, 300, 400, 100);
+		
+
 		startGame.addActionListener(evt -> {
-			try {
-				objOut.writeObject(new StartGamePacket());
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Error while sending object", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-		});
+				try {
+					objOut.writeObject(new StartGamePacket());
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Error while sending object", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
 
 
 		JLabel dummy = new JLabel(" ");
