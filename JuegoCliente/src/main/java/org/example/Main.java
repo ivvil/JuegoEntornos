@@ -77,7 +77,11 @@ public class Main {
         multiPlayer.addActionListener(e -> {
             menuFrame.setVisible(false);
 
-            newMultiPlayer(menuFrame);
+            JOptionPane.showMessageDialog(menuFrame, "This feature is not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+
+            menuFrame.setVisible(true);
+
+            // newMultiPlayer(menuFrame);
         });
 
         quit.addActionListener(e -> menuFrame.dispatchEvent(new WindowEvent(menuFrame, WindowEvent.WINDOW_CLOSING)));

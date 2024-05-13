@@ -2,6 +2,8 @@ package org.example;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
@@ -43,8 +45,11 @@ public class Game extends JPanel {
         setSize(width, height);
         setLayout(new BorderLayout());
         coinsCounter = new JLabel("Coins: " + coinsCount);
+        coinsCounter.setFont(new Font("Arial", Font.BOLD, 20));
+        FontMetrics fm = coinsCounter.getFontMetrics(coinsCounter.getFont());
+        int ccX = width / 2 - fm.stringWidth(coinsCounter.getText()) / 2;
         add(coinsCounter);
-        coinsCounter.setBounds((width / 2), 0, width, 50);
+        coinsCounter.setBounds(ccX, height - 80, width, 50);
 
         // Define player                        vscode -> MARK: player
         this.player = new Player(this);
@@ -52,8 +57,12 @@ public class Game extends JPanel {
         player.setBounds((width / 2) - playerSize, (height / 2) - playerSize, playerSize, playerSize);
 
         playerHealth = new JLabel("Health: " + player.getHealth());
+        playerHealth.setFont(new Font("Arial", Font.BOLD, 20));
+        fm = playerHealth.getFontMetrics(playerHealth.getFont());
+        int phX = width / 2 - fm.stringWidth(playerHealth.getText()) / 2;
         add(playerHealth);
-        playerHealth.setBounds((width / 2), 50, width, 50);
+        playerHealth.setBounds(phX, height - 120, width, 50);
+        
 
         // Define walls                         vscode -> MARK: walls  
         walls = new Vector<>();
@@ -158,6 +167,19 @@ public class Game extends JPanel {
     private void hideWindow() {
         jf.setVisible(false);
     }
+
+    private void updateCoinsPos() {
+        FontMetrics fm = coinsCounter.getFontMetrics(coinsCounter.getFont());
+        int ccX = getWidth() / 2 - fm.stringWidth(coinsCounter.getText()) / 2;
+        coinsCounter.setBounds(ccX, getHeight() - 80, getWidth(), 50);
+    }
+
+    private void updatePHPos() {
+        FontMetrics fm = playerHealth.getFontMetrics(playerHealth.getFont());
+        int phX = getWidth() / 2 - fm.stringWidth(playerHealth.getText()) / 2;
+        playerHealth.setBounds(phX, getHeight() - 120, getWidth(), 50);
+    }
+
     // Event loop                           vscode -> MARK: EventLoop
     class EventLoop extends Thread {
         @Override
@@ -194,10 +216,12 @@ public class Game extends JPanel {
                         gp.remove(coins.get(i));
                         coinsCounter.setText("Coins: " + ++coinsCount);
                         coins.remove(coins.get(i));
+                        updateCoinsPos();
                     }
                 }
 
                 playerHealth.setText("Health: " + player.getHealth());
+                updatePHPos();
 
 
                 if (player.getHealth() <= 0) {
