@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.packets.admin.IAmAnAdminPacket;
 import org.example.packets.admin.StartGamePacket;
+import org.example.packets.admin.StopServerPacket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -124,17 +125,25 @@ public class ServerConnection {
 		startGame.setFont(new Font("Arial", Font.BOLD, 22));
 		startGame.setBounds(50, 250, 400, 50);
 
-		JButton stopServer = new JButton("Shutdown server");
-		panel.add(stopServer);
-		stopServer.setFont(new Font("Arial", Font.BOLD, 22));
-		stopServer.setBounds(100, 300, 400, 100);
 		
-
 		startGame.addActionListener(evt -> {
 				try {
 					objOut.writeObject(new StartGamePacket());
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Error while sending object", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error while sending Start packet", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+
+		JButton stopServer = new JButton("Shutdown server");
+		panel.add(stopServer);
+		stopServer.setFont(new Font("Arial", Font.BOLD, 22));
+		stopServer.setBounds(100, 300, 400, 100);
+
+		stopServer.addActionListener(evt -> {
+				try {
+					objOut.writeObject(new StopServerPacket());
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Error while sending Stop packet", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 

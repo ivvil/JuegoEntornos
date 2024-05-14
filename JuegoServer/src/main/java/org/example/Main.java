@@ -3,6 +3,8 @@ package org.example;
 import org.example.packets.Packet;
 import org.example.packets.admin.IAmAnAdminPacket;
 import org.example.packets.admin.StartGamePacket;
+import org.example.packets.admin.StopServerPacket;
+import org.example.packets.client.DisconnectPacket;
 import org.example.packets.client.EnemyPacket;
 import org.example.packets.client.GamePacket;
 import org.example.packets.client.PlayerPacket;
@@ -43,9 +45,9 @@ public class Main {
         int maxWorkers = Runtime.getRuntime().availableProcessors();
         gamePacket = new GamePacket(new WallPacket[]{
             
-            // TODO: Add walls describing the level
+				// TODO: Add walls describing the level
 
-        }, (int) (Math.random() * 1000), (int) (Math.random() * 1000), numEnemis, initialNumCoins);
+			}, (int) (Math.random() * 1000), (int) (Math.random() * 1000), numEnemis, initialNumCoins);
 
         int workers = Integer.parseInt(JOptionPane.showInputDialog(null, "How many workers do you want to use?"));
         if (workers > maxWorkers) {
@@ -65,8 +67,8 @@ public class Main {
                 Socket socket = serverSocket.accept();
                 info("Client connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 pool.execute(() -> {
-                    onClientConnect(socket);
-                });
+						onClientConnect(socket);
+					});
                 
             }
 
@@ -85,26 +87,31 @@ public class Main {
         sendPacketToEveryClient(gamePacket);
         for (Socket s : clients.keySet()){
             pool.execute(() -> {
-                while (true){
-                    try{
-                        ObjectInputStream objIn = new ObjectInputStream(s.getInputStream());
-                        Object o = objIn.readObject();
-                        if (o instanceof PlayerPacket pp){
-                            sendPacketToEveryClientExcept(pp, pp.getColor());
-                        }else if (o instanceof EnemyPacket ep){
-                            sendPacketToEveryClientExcept(ep, clients.get(s));
-                        }else {
-                            warning("Unknown packet received from client: " + o);
-                        }
-                    } catch (IOException e){
-                        error("Error while reading object: " + e.getMessage());
-                    } catch (ClassNotFoundException e){
-                        error("Error while reading object: " + e.getMessage());
-                    }
-                }
-            });
+					while (true){
+						try{
+							ObjectInputStream objIn = new ObjectInputStream(s.getInputStream());
+							Object o = objIn.readObject();
+							if (o instanceof PlayerPacket pp){
+								sendPacketToEveryClientExcept(pp, pp.getColor());
+							}else if (o instanceof EnemyPacket ep){
+								sendPacketToEveryClientExcept(ep, clients.get(s));
+							}else {
+								warning("Unknown packet received from client: " + o);
+							}
+						} catch (IOException e){
+							error("Error while reading object: " + e.getMessage());
+						} catch (ClassNotFoundException e){
+							error("Error while reading object: " + e.getMessage());
+						}
+					}
+				});
         }
     }
+
+	public static void stopGame() {
+		sendPacketToEveryClient(new DisconnectPacket());
+		isGameStarted = false;
+	}
 
     private static boolean isPosFree(int x, int y){
         for (WallPacket w : gamePacket.getWalls()){
@@ -140,12 +147,14 @@ public class Main {
                         socket.close();
                         return;
                     }
-                    int playerColor = i;
+                    int playerColor = i; // We use the player color as a UUID
                     while (players.containsKey(playerColor)) {
                         playerColor = genRandomColor().getRGB();
                     }
                     PlayerPacket newPlayer = new PlayerPacket((int) (Math.random() * 1850), (int) (Math.random() * 1010), playerColor);
-                    while (!isPosFree(newPlayer.getX(), newPlayer.getY())) {
+					
+					// FIXME Spawning all the players at the same position blocks new players from connecting
+                    while (!isPosFree(newPlayer.getX(), newPlayer.getY())) { // Check if the new player can spawn at that location
                         newPlayer = new PlayerPacket((int) (Math.random() * 1850), (int) (Math.random() * 1010), playerColor);
                     }
                     pp[0] = newPlayer;
@@ -160,7 +169,7 @@ public class Main {
                         ois.close();
                         info("Notifying admin of new player");
                     }
-                }else if (o instanceof IAmAnAdminPacket) {
+                } else if (o instanceof IAmAnAdminPacket) {
                     if (isAdminConnected){
                         warning("An admin tried to connect while another admin is already connected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                         return;
@@ -171,18 +180,24 @@ public class Main {
                     String data = players.size() + "|" + pool.getPoolSize();
                     objOut.writeObject(data);
                     new Thread(() -> {
-                        while (true){
-                            try {
-                                Object obj = objIn.readObject();
-                                if (obj instanceof StartGamePacket){
-                                    info("Admin started the game");
-                                    startGame();
-                                    break;
-                                }
-                            } catch (IOException | ClassNotFoundException e){
-                                error("Error while reading object: " + e.getMessage());
-                            }
-                        }
+							while (true){
+								try {
+									Object obj = objIn.readObject();
+									if (obj instanceof StartGamePacket){
+										info("Admin started the game");
+										startGame();
+										break;
+									}
+
+									if (obj instanceof StopServerPacket) {
+										info("Admin stopped the game");
+										break;
+									}
+
+								} catch (IOException | ClassNotFoundException e){
+									error("Error while reading object: " + e.getMessage());
+								}
+							}
                     });
                 }
             } catch (ClassNotFoundException e){

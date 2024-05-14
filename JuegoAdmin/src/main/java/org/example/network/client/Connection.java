@@ -7,5 +7,4 @@ public interface Connection {
 	void initConnection() throws UnknownHostException, IOException;
 	void closeConnection() throws IOException;
 	void startListener();
-
 }

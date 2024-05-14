@@ -2,10 +2,7 @@ package org.example.multiplayer;
 
 import org.example.Wall;
 import org.example.packets.admin.StartGamePacket;
-import org.example.packets.client.EnemyPacket;
-import org.example.packets.client.GamePacket;
-import org.example.packets.client.PlayerPacket;
-import org.example.packets.client.WallPacket;
+import org.example.packets.client.*;
 
 import java.awt.Point;
 import java.io.IOException;
@@ -57,7 +54,7 @@ public class MPConnection {
                 game.addPlayer(new MPPlayer(pp.getColor(), false, game, new Point(pp.getX(), pp.getY())));
         }
         game.startGame();
-        initListener();
+		initListener();
     }
 
     private PlayerPacket getSelfPlayer(Integer color) {
@@ -113,7 +110,9 @@ public class MPConnection {
                         }
                     } else if (o instanceof EnemyPacket ep) {
                         game.moveEnemy(ep);
-                    }
+                    } else if (o instanceof DisconnectPacket) {
+						break;
+					}
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -124,6 +123,8 @@ public class MPConnection {
                 }
             }
         }).start();
+		// TODO Notify user of disconnection
+		
     }
 
     public static MPConnection newConnection(String host, int port, int rgb, MPGame game) {

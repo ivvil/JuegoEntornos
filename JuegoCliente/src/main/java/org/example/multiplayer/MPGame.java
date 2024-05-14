@@ -114,6 +114,10 @@ public class MPGame extends JPanel {
         }
     }
 
+	public void stopGame() {
+		
+	}
+
     public MPPlayer getPlayer() {
         return player;
     }
